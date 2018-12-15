@@ -1,4 +1,4 @@
-package ufsc.br.barcode_scanner;
+package br.ufsc.barcodescanner;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,10 +12,8 @@ import com.google.android.gms.vision.barcode.Barcode;
 public class BarcodeProcessor implements Detector.Processor<Barcode> {
 
     private static final String TAG = "BarcodeProcessor";
-
-    private Context context;
-
     public TextView txtBarcodeValue; //TODO remove
+    private Context context;
 
     public BarcodeProcessor(Context context, TextView txtBarcodeValue) {
         this.context = context;
@@ -34,14 +32,6 @@ public class BarcodeProcessor implements Detector.Processor<Barcode> {
             Intent intent = new Intent(this.context, ScannedItemActivity.class);
             intent.putExtra(ScannerActivity.BARCODE_VALUE, barcodes.valueAt(0).displayValue);
             this.context.startActivity(intent);
-//            txtBarcodeValue.post(new Runnable() {
-//
-//                @Override
-//                public void run() {
-//                    txtBarcodeValue.setText(barcodes.valueAt(0).displayValue);
-//                }
-//
-//            });
         }
     }
 

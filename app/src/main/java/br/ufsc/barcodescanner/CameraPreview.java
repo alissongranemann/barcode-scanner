@@ -1,4 +1,4 @@
-package ufsc.br.barcode_scanner;
+package br.ufsc.barcodescanner;
 
 import android.Manifest;
 import android.app.Activity;
@@ -66,7 +66,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions,
                                            int[] grantResults) {
-        if(!startCamera()) {
+        if (!startCamera()) {
             Toast.makeText(getContext(), "Camera permission is required.",
                     Toast.LENGTH_SHORT).show();
         }

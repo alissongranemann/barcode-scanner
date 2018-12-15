@@ -1,7 +1,7 @@
-package ufsc.br.barcode_scanner;
+package br.ufsc.barcodescanner;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
