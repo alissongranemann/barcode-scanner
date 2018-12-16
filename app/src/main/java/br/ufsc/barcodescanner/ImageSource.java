@@ -5,16 +5,6 @@ import android.os.Parcelable;
 
 public class ImageSource implements Parcelable {
 
-    private String location;
-
-    public ImageSource(String path) {
-        this.location = path;
-    }
-
-    protected ImageSource(Parcel in) {
-        location = in.readString();
-    }
-
     public static final Creator<ImageSource> CREATOR = new Creator<ImageSource>() {
         @Override
         public ImageSource createFromParcel(Parcel in) {
@@ -26,6 +16,15 @@ public class ImageSource implements Parcelable {
             return new ImageSource[size];
         }
     };
+    private String location;
+
+    public ImageSource(String path) {
+        this.location = path;
+    }
+
+    protected ImageSource(Parcel in) {
+        location = in.readString();
+    }
 
     public String getImageLocation() {
         return location;

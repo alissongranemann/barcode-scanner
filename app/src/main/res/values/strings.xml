@@ -2,4 +2,5 @@
     <string name="app_name">Barcode Scanner - UFSC</string>
     <string name="action_favorite">Excluir</string>
     <string name="toolbar_title">Item</string>
+    <string name="item_deleted">Item excluído!</string>
 </resources>

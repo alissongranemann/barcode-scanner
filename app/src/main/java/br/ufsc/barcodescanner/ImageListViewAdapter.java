@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -84,7 +83,7 @@ public class ImageListViewAdapter extends RecyclerView.Adapter<ImageListViewAdap
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            if(position != RecyclerView.NO_POSITION) {
+            if (position != RecyclerView.NO_POSITION) {
                 ImageSource imageSource = galleryList.get(position);
                 Intent intent = new Intent(context, ImageDetailActivity.class);
                 intent.putExtra(ImageDetailActivity.EXTRA_SPACE_PHOTO, imageSource);

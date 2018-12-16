@@ -1,7 +1,6 @@
 package br.ufsc.barcodescanner;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -89,14 +88,15 @@ public class ScannedItemActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete) {
             //TODO delete item
-            Toast.makeText(getApplicationContext(), "Item deleted!",
+            Toast.makeText(getApplicationContext(), getString(R.string.item_deleted),
                     Toast.LENGTH_SHORT).show();
-            finish();
+            onBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
     private ArrayList<ImageSource> prepareData() {
         ArrayList<ImageSource> images = new ArrayList<>();
 
