@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BarcodeScanner">
         <activity
-            android:name="br.ufsc.barcodescanner.ScannerActivity"
+            android:name=".ScannerActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,13 +26,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="br.ufsc.barcodescanner.ScannedItemActivity"
-            android:parentActivityName="br.ufsc.barcodescanner.ScannerActivity" >
+        <activity
+            android:name=".ScannedItemActivity"
+            android:parentActivityName=".ScannerActivity">
+
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.ufsc.barcodescanner.ScannedItemActivity" />
         </activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="br.ufsc.barcodescanner.fileprovider"
@@ -40,8 +43,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name=".ImageDetailActivity"></activity>
     </application>
 
 </manifest>

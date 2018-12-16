@@ -2,6 +2,7 @@ package br.ufsc.barcodescanner;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -62,13 +64,6 @@ public class ImageListViewAdapter extends RecyclerView.Adapter<ImageListViewAdap
 
                 })
                 .into(viewHolder.img);
-
-//        viewHolder.img.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(context,"Image",Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
     @Override
@@ -76,13 +71,25 @@ public class ImageListViewAdapter extends RecyclerView.Adapter<ImageListViewAdap
         return galleryList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView img;
 
         public ViewHolder(View view) {
             super(view);
 
             img = view.findViewById(R.id.img);
+            img.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            if(position != RecyclerView.NO_POSITION) {
+                ImageSource imageSource = galleryList.get(position);
+                Intent intent = new Intent(context, ImageDetailActivity.class);
+                intent.putExtra(ImageDetailActivity.EXTRA_SPACE_PHOTO, imageSource);
+                context.startActivity(intent);
+            }
         }
     }
 

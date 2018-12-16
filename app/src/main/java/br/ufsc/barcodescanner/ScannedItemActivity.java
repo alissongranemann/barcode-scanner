@@ -14,8 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,14 +79,31 @@ public class ScannedItemActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_delete) {
+            //TODO delete item
+            Toast.makeText(getApplicationContext(), "Item deleted!",
+                    Toast.LENGTH_SHORT).show();
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     private ArrayList<ImageSource> prepareData() {
         ArrayList<ImageSource> images = new ArrayList<>();
 
         File f = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
         File file[] = f.listFiles();
         for (int i = 0; i < file.length; i++) {
-            ImageSource imageSource = new ImageSource();
-            imageSource.setImageLocation(file[i].getAbsolutePath());
+            ImageSource imageSource = new ImageSource(file[i].getAbsolutePath());
             images.add(imageSource);
         }
 
@@ -134,8 +153,7 @@ public class ScannedItemActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Log.d(TAG, "Reloading recycler view.");
-            ImageSource imageSource = new ImageSource();
-            imageSource.setImageLocation(currentPhotoPath);
+            ImageSource imageSource = new ImageSource(currentPhotoPath);
             imageSources.add(imageSource);
 
             adapter.notifyItemInserted(imageSources.size() - 1);
