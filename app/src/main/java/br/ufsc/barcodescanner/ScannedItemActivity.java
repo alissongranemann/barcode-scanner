@@ -1,6 +1,7 @@
 package br.ufsc.barcodescanner;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,7 +25,10 @@ public class ScannedItemActivity extends AppCompatActivity {
     private static final String TAG = "ScannedItemActivity";
 
     private String barcodeValue;
-    private int index = 0;
+    private String currentPhotoPath;
+
+    private ImageListViewAdapter adapter;
+    private ArrayList<ImageSource> imageSources;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +44,14 @@ public class ScannedItemActivity extends AppCompatActivity {
         textView.setText(message);
 
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.imagegallery);
+        RecyclerView recyclerView = findViewById(R.id.imagegallery);
         recyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList<CreateList> createLists = prepareData();
-        MyAdapter adapter = new MyAdapter(getApplicationContext(), createLists);
+        this.imageSources = prepareData();
+        this.adapter = new ImageListViewAdapter(getApplicationContext(), imageSources);
         recyclerView.setAdapter(adapter);
-
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,19 +62,18 @@ public class ScannedItemActivity extends AppCompatActivity {
         });
     }
 
-    private ArrayList<CreateList> prepareData() {
-        ArrayList<CreateList> theimage = new ArrayList<>();
+    private ArrayList<ImageSource> prepareData() {
+        ArrayList<ImageSource> images = new ArrayList<>();
 
         File f = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
         File file[] = f.listFiles();
         for (int i = 0; i < file.length; i++) {
-            CreateList createList = new CreateList();
-            createList.setImage_title(String.valueOf(i));
-            createList.setImage_Location(file[i].getAbsolutePath());
-            theimage.add(createList);
+            ImageSource imageSource = new ImageSource();
+            imageSource.setImageLocation(file[i].getAbsolutePath());
+            images.add(imageSource);
         }
 
-        return theimage;
+        return images;
     }
 
     private void dispatchTakePictureIntent() {
@@ -100,7 +102,7 @@ public class ScannedItemActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String imageFileName = barcodeValue + "_" + (++index);
+        String imageFileName = barcodeValue + "_" + (imageSources.size() + 1);
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -108,7 +110,21 @@ public class ScannedItemActivity extends AppCompatActivity {
                 storageDir      /* directory */
         );
 
+        this.currentPhotoPath = image.getAbsolutePath();
+
         return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Log.d(TAG, "Reloading recycler view.");
+            ImageSource imageSource = new ImageSource();
+            imageSource.setImageLocation(currentPhotoPath);
+            imageSources.add(imageSource);
+
+            adapter.notifyItemInserted(imageSources.size() - 1);
+        }
     }
 
 }

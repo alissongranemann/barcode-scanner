@@ -2,16 +2,13 @@ package br.ufsc.barcodescanner;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -21,35 +18,32 @@ import com.bumptech.glide.request.target.Target;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class ImageListViewAdapter extends RecyclerView.Adapter<ImageListViewAdapter.ViewHolder> {
 
-    private static final String TAG = "MyAdapter";
+    private static final String TAG = "ImageListViewAdapter";
 
-    private ArrayList<CreateList> galleryList;
+    private ArrayList<ImageSource> galleryList;
     private Context context;
 
-    public MyAdapter(Context context, ArrayList<CreateList> galleryList) {
+    public ImageListViewAdapter(Context context, ArrayList<ImageSource> galleryList) {
         this.galleryList = galleryList;
         this.context = context;
     }
 
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ImageListViewAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_layout, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MyAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(ImageListViewAdapter.ViewHolder viewHolder, int i) {
         File file = new File(galleryList.get(i).getImageLocation());
         Uri imageUri = Uri.fromFile(file);
-        Log.i(TAG, "Image path: " + galleryList.get(i).getImageLocation());
-
-        viewHolder.title.setText(galleryList.get(i).getImage_title());
-        viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        final ImageView imageView = viewHolder.img;
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide.with(context)
                 .load(imageUri)
-//                .asBitmap()
                 .fitCenter()
                 .error(R.drawable.ic_error)
                 .placeholder(R.drawable.ic_placeholder)
@@ -83,14 +77,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView title;
         private ImageView img;
 
         public ViewHolder(View view) {
             super(view);
 
-            title = (TextView) view.findViewById(R.id.title);
-            img = (ImageView) view.findViewById(R.id.img);
+            img = view.findViewById(R.id.img);
         }
     }
 
