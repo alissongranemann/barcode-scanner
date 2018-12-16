@@ -1,26 +1,22 @@
 package br.ufsc.barcodescanner;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 
 public class ScannedItemActivity extends AppCompatActivity {
 
@@ -28,7 +24,7 @@ public class ScannedItemActivity extends AppCompatActivity {
     private static final String TAG = "ScannedItemActivity";
 
     private String barcodeValue;
-    private String mCurrentPhotoPath;
+    private int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +39,17 @@ public class ScannedItemActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.textView);
         textView.setText(message);
 
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.imagegallery);
+        recyclerView.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        recyclerView.setLayoutManager(layoutManager);
+        ArrayList<CreateList> createLists = prepareData();
+        MyAdapter adapter = new MyAdapter(getApplicationContext(), createLists);
+        recyclerView.setAdapter(adapter);
+
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +57,21 @@ public class ScannedItemActivity extends AppCompatActivity {
                 ScannedItemActivity.this.dispatchTakePictureIntent();
             }
         });
+    }
+
+    private ArrayList<CreateList> prepareData() {
+        ArrayList<CreateList> theimage = new ArrayList<>();
+
+        File f = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
+        File file[] = f.listFiles();
+        for (int i = 0; i < file.length; i++) {
+            CreateList createList = new CreateList();
+            createList.setImage_title(String.valueOf(i));
+            createList.setImage_Location(file[i].getAbsolutePath());
+            theimage.add(createList);
+        }
+
+        return theimage;
     }
 
     private void dispatchTakePictureIntent() {
@@ -76,38 +98,17 @@ public class ScannedItemActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            mImageView.setImageBitmap(imageBitmap);
-            galleryAddPic();
-        }
-    }
-
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = barcodeValue + "_" + timeStamp;
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        String imageFileName = barcodeValue + "_" + (++index);
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
         return image;
-    }
-
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
     }
 
 }
