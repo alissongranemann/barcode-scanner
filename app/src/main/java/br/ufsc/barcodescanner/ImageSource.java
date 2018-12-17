@@ -17,9 +17,11 @@ public class ImageSource implements Parcelable {
         }
     };
     private String location;
+    private int index;
 
-    public ImageSource(String path) {
+    public ImageSource(String path, int index) {
         this.location = path;
+        this.index = index;
     }
 
     protected ImageSource(Parcel in) {
@@ -30,10 +32,6 @@ public class ImageSource implements Parcelable {
         return location;
     }
 
-    public void setImageLocation(String location) {
-        this.location = location;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -42,5 +40,9 @@ public class ImageSource implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(location);
+    }
+
+    public int getIndex() {
+        return index;
     }
 }

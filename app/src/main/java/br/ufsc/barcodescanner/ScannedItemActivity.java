@@ -40,7 +40,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanned_item);
 
-        Toolbar myToolbar = findViewById(R.id.toolbar);
+        Toolbar myToolbar = findViewById(R.id.scanned_item_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -50,7 +50,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         String message = intent.getStringExtra(ScannerActivity.BARCODE_VALUE);
         this.barcodeValue = message;
         // Capture the layout's TextView and set the string as its text
-        TextView textView = findViewById(R.id.textView);
+        TextView textView = findViewById(R.id.barcode_value);
         textView.setText(message);
 
 
@@ -63,7 +63,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         this.adapter = new ImageListViewAdapter(getApplicationContext(), imageSources);
         recyclerView.setAdapter(adapter);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.take_photo_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,12 +82,8 @@ public class ScannedItemActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_done:
                 //TODO save item
@@ -119,11 +115,12 @@ public class ScannedItemActivity extends AppCompatActivity {
                             }
                             ScannedItemActivity.super.onBackPressed();
                         }
-                    }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // Do nothing
-                }
-            }).show();
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // Do nothing
+                        }
+                    }).show();
         } else {
             super.onBackPressed();
         }
@@ -135,7 +132,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         File f = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
         File file[] = f.listFiles();
         for (int i = 0; i < file.length; i++) {
-            ImageSource imageSource = new ImageSource(file[i].getAbsolutePath());
+            ImageSource imageSource = new ImageSource(file[i].getAbsolutePath(), i);
             images.add(imageSource);
         }
 
@@ -168,7 +165,8 @@ public class ScannedItemActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String imageFileName = barcodeValue + "_" + (imageSources.size() + 1);
+        String count = String.valueOf(imageSources.size() + 1);
+        String imageFileName = barcodeValue + "_" + count;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -185,10 +183,11 @@ public class ScannedItemActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Log.d(TAG, "Reloading recycler view.");
-            ImageSource imageSource = new ImageSource(currentPhotoPath);
+            int index = imageSources.size();
+            ImageSource imageSource = new ImageSource(currentPhotoPath, index);
             imageSources.add(imageSource);
 
-            adapter.notifyItemInserted(imageSources.size() - 1);
+            adapter.notifyItemInserted(index);
         }
     }
 

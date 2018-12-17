@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/scanned_item_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimaryDark"
@@ -24,19 +24,19 @@
     </android.support.v7.widget.Toolbar>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/barcode_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/scanned_item_toolbar"
         android:textSize="30sp"
         android:textStyle="bold" />
 
     <View
         android:id="@+id/textViewDivider"
         style="@style/Divider"
-        android:layout_below="@id/textView"
+        android:layout_below="@id/barcode_value"
         android:layout_marginTop="2dp" />
 
 
@@ -54,7 +54,7 @@
             android:layout_marginTop="2dp" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/take_photo_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

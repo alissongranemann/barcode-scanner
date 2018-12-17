@@ -7,4 +7,7 @@
     <string name="dialog_exit_title">Cancelar</string>
     <string name="ok">Sim</string>
     <string name="cancel">Não</string>
+    <string name="dialog_delete_img_message">Deseja realmente excluir esta foto?</string>
+    <string name="image_detail_toolbar_title">Foto</string>
+    <string name="action_delete">Excluir</string>
 </resources>
