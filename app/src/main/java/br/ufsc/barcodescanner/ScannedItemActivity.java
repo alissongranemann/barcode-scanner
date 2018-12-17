@@ -1,5 +1,6 @@
 package br.ufsc.barcodescanner;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -86,15 +88,45 @@ public class ScannedItemActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_delete) {
-            //TODO delete item
-            Toast.makeText(getApplicationContext(), getString(R.string.item_deleted),
-                    Toast.LENGTH_SHORT).show();
-            onBackPressed();
-            return true;
+        switch (id) {
+            case R.id.action_done:
+                //TODO save item
+                Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
+                        Toast.LENGTH_SHORT).show();
+                super.onBackPressed();
+                return true;
+            case android.R.id.home:
+                this.onBackPressed();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!this.imageSources.isEmpty()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.dialog_exit_message)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
+                            if (dir.isDirectory()) {
+                                String[] children = dir.list();
+                                for (int i = 0; i < children.length; i++) {
+                                    new File(dir, children[i]).delete();
+                                }
+                            }
+                            ScannedItemActivity.super.onBackPressed();
+                        }
+                    }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // Do nothing
+                }
+            }).show();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private ArrayList<ImageSource> prepareData() {
