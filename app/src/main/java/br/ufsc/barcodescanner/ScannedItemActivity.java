@@ -89,6 +89,7 @@ public class ScannedItemActivity extends AppCompatActivity {
                 //TODO save item
                 Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
                         Toast.LENGTH_SHORT).show();
+                insertBarcode();
                 super.onBackPressed();
                 return true;
             case android.R.id.home:
@@ -97,6 +98,12 @@ public class ScannedItemActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void insertBarcode() {
+        Barcode barcode = new Barcode();
+        barcode.barcodeValue = this.barcodeValue;
+//        DatabaseHelper.getInstance(this).itemDao().insertBarcode(barcode);
     }
 
     @Override
@@ -131,6 +138,7 @@ public class ScannedItemActivity extends AppCompatActivity {
 
         File f = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
         File file[] = f.listFiles();
+        //TODO leave like this or overwrite? if doesn't overwrite this can't be deleted at onBackPressed
         for (int i = 0; i < file.length; i++) {
             ImageSource imageSource = new ImageSource(file[i].getAbsolutePath(), i);
             images.add(imageSource);
