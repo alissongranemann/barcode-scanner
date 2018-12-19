@@ -17,24 +17,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BarcodeScanner">
-        <activity
-            android:name=".ScannerActivity"
-            android:screenOrientation="portrait">
+
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ScannedItemActivity"
-            android:parentActivityName=".ScannerActivity">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.ufsc.barcodescanner.ScannedItemActivity" />
-        </activity>
+        <activity android:name=".ScannedItemActivity"></activity>
+        <activity android:name=".ImageDetailActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -46,7 +38,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".ImageDetailActivity"></activity>
     </application>
 
 </manifest>

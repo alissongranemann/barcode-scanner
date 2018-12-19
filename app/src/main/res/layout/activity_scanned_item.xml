@@ -27,9 +27,9 @@
         android:id="@+id/barcode_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/scanned_item_toolbar"
         android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:layout_below="@id/scanned_item_toolbar"
         android:textSize="30sp"
         android:textStyle="bold" />
 
