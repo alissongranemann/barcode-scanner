@@ -23,6 +23,11 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+
+import br.ufsc.barcodescanner.database.DatabaseHelper;
+import br.ufsc.barcodescanner.entity.Barcode;
+import br.ufsc.barcodescanner.repository.BarcodeRepository;
 
 public class ScannedItemActivity extends AppCompatActivity {
 
@@ -31,6 +36,7 @@ public class ScannedItemActivity extends AppCompatActivity {
 
     private String barcodeValue;
     private String currentPhotoPath;
+    private BarcodeRepository repository;
 
     private ImageListViewAdapter adapter;
     private ArrayList<ImageSource> imageSources;
@@ -70,6 +76,8 @@ public class ScannedItemActivity extends AppCompatActivity {
                 ScannedItemActivity.this.dispatchTakePictureIntent();
             }
         });
+
+        repository = new BarcodeRepository(this);
     }
 
     // Menu icons are inflated just as they were with actionbar
@@ -101,9 +109,7 @@ public class ScannedItemActivity extends AppCompatActivity {
     }
 
     private void insertBarcode() {
-        Barcode barcode = new Barcode();
-        barcode.barcodeValue = this.barcodeValue;
-//        DatabaseHelper.getInstance(this).itemDao().insertBarcode(barcode);
+        repository.saveBarcode(this.barcodeValue);
     }
 
     @Override

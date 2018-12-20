@@ -14,7 +14,7 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
-public class ScannerFragment extends Fragment {
+public class ScannerFragment extends Fragment implements FragmentLifecycle {
 
     public static final String BARCODE_VALUE = "br.ufsc.barcodescanner.BARCODE_VALUE";
     private static final String TAG = "ScannerFragment";
@@ -22,12 +22,7 @@ public class ScannerFragment extends Fragment {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private FrameLayout frameLayout;
-    private boolean initilialized = false;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private boolean initialised = false;
 
     @Nullable
     @Override
@@ -38,13 +33,13 @@ public class ScannerFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        cameraSource.release();
+        releaseCamera();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initialiseDetectorsAndSources();
+        initSource();
     }
 
     @Override
@@ -53,22 +48,42 @@ public class ScannerFragment extends Fragment {
         this.frameLayout = view.findViewById(R.id.surfaceView);
     }
 
-    private void initialiseDetectorsAndSources() {
-        initilialized = true;
-        Context context = getActivity().getApplicationContext();
-        barcodeDetector = new BarcodeDetector.Builder(context)
-                .setBarcodeFormats(Barcode.ALL_FORMATS)
-                .build();
+    private void initSource() {
+        if (!initialised) {
+            Context context = getActivity();
+            barcodeDetector = new BarcodeDetector.Builder(context)
+                    .setBarcodeFormats(Barcode.ALL_FORMATS)
+                    .build();
+            barcodeDetector.setProcessor(new BarcodeProcessor(context));
 
-        cameraSource = new CameraSource.Builder(context, barcodeDetector)
-                //.setRequestedPreviewSize(1920, 1080)
-                .setAutoFocusEnabled(true)
-                .build();
+            cameraSource = new CameraSource.Builder(context, barcodeDetector)
+                    .setAutoFocusEnabled(true)
+                    .build();
 
-        cameraPreview = new CameraPreview(context, cameraSource);
-        frameLayout.addView(cameraPreview);
+            cameraPreview = new CameraPreview(context, cameraSource, barcodeDetector);
+            frameLayout.addView(cameraPreview);
 
-        barcodeDetector.setProcessor(new BarcodeProcessor(context));
+            initialised = true;
+        }
+    }
+
+    private void releaseCamera() {
+        if (cameraSource != null) {
+            cameraSource.release();
+            cameraSource = null;
+        }
+        initialised = false;
+    }
+
+    @Override
+    public void onPauseFragment() {
+        releaseCamera();
+        frameLayout.removeAllViews();
+    }
+
+    @Override
+    public void onResumeFragment() {
+        initSource();
     }
 
 }

@@ -13,9 +13,9 @@
 
     <TextView
         android:id="@+id/imgCount"
-        android:layout_below="@id/barcodeValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/barcodeValue"
         android:layout_marginTop="5dp"
         android:textSize="18sp" />
 </RelativeLayout>

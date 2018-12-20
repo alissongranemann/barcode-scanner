@@ -30,16 +30,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         //TODO switch tabs: camera is overlaying the list view
-        adapter.addFragment(new ItemFragment(), "LIST");
         adapter.addFragment(new ScannerFragment(), "SCANNER");
+        adapter.addFragment(new ItemFragment(), "LIST");
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            int currentPosition = 0;
+
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
+            @Override
+            public void onPageSelected(int newPosition) {
+                FragmentLifecycle fragmentToShow = (FragmentLifecycle) adapter.getItem(newPosition);
+                fragmentToShow.onResumeFragment();
+
+                FragmentLifecycle fragmentToHide = (FragmentLifecycle) adapter.getItem(currentPosition);
+                fragmentToHide.onPauseFragment();
+
+                currentPosition = newPosition;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
     }
 
     private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_list);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_barcode);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_barcode);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_list);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
