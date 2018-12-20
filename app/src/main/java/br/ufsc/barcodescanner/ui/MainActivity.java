@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner;
+package br.ufsc.barcodescanner.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import br.ufsc.barcodescanner.R;
 
 public class MainActivity extends AppCompatActivity {
 

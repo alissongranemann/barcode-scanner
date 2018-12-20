@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner;
+package br.ufsc.barcodescanner.ui;
 
 public interface FragmentLifecycle {
 

@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner;
+package br.ufsc.barcodescanner.ui;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
+
+import br.ufsc.barcodescanner.R;
 
 public class ImageDetailActivity extends AppCompatActivity {
 

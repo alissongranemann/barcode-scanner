@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner;
+package br.ufsc.barcodescanner.ui;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import android.widget.FrameLayout;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+
+import br.ufsc.barcodescanner.R;
 
 public class ScannerFragment extends Fragment implements FragmentLifecycle {
 

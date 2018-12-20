@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner;
+package br.ufsc.barcodescanner.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -17,6 +17,8 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+
+import br.ufsc.barcodescanner.R;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback, ActivityCompat.OnRequestPermissionsResultCallback {
 

@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner;
+package br.ufsc.barcodescanner.ui;
 
 
 import android.content.Context;
@@ -18,6 +18,8 @@ import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import br.ufsc.barcodescanner.R;
 
 public class ImageListViewAdapter extends RecyclerView.Adapter<ImageListViewAdapter.ViewHolder> {
 

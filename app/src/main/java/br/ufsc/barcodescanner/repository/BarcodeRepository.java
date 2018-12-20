@@ -33,4 +33,8 @@ public class BarcodeRepository {
     public Barcode[] loadBarcodes() {
         return database.itemDao().loadAllBarcodes();
     }
+
+    public void delete(Barcode barcode) {
+        this.database.itemDao().deleteBarcode(barcode);
+    }
 }

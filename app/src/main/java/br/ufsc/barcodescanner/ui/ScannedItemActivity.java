@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner;
+package br.ufsc.barcodescanner.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,10 +23,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
-import br.ufsc.barcodescanner.database.DatabaseHelper;
-import br.ufsc.barcodescanner.entity.Barcode;
+import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.repository.BarcodeRepository;
 
 public class ScannedItemActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner;
+package br.ufsc.barcodescanner.ui;
 
 import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.entity.Barcode;
 import br.ufsc.barcodescanner.utils.TimestampConverter;
 
@@ -18,7 +19,6 @@ public class ItemListAdapter extends ArrayAdapter<Barcode> {
 
     public ItemListAdapter(Activity context, Barcode[] barcodes) {
         super(context, R.layout.fragment_item_list_row, barcodes);
-
         this.context = context;
         this.barcodes = barcodes;
     }
