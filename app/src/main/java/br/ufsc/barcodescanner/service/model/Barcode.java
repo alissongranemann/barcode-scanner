@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.entity;
+package br.ufsc.barcodescanner.service.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;

@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.ui;
+package br.ufsc.barcodescanner.view.adapter;
 
 
 import android.content.Context;
@@ -20,6 +20,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
+import br.ufsc.barcodescanner.service.model.ImageSource;
+import br.ufsc.barcodescanner.view.ui.ImageDetailActivity;
 
 public class ImageListViewAdapter extends RecyclerView.Adapter<ImageListViewAdapter.ViewHolder> {
 

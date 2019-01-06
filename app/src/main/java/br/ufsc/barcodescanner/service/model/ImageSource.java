@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.ui;
+package br.ufsc.barcodescanner.service.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

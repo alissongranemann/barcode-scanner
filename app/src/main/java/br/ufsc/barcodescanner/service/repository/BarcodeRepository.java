@@ -1,14 +1,14 @@
-package br.ufsc.barcodescanner.repository;
+package br.ufsc.barcodescanner.service.repository;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 
 import java.util.Date;
+import java.util.List;
 
-import br.ufsc.barcodescanner.database.DatabaseHelper;
-import br.ufsc.barcodescanner.entity.Barcode;
+import br.ufsc.barcodescanner.service.database.AppDatabase;
+import br.ufsc.barcodescanner.service.database.DatabaseHelper;
+import br.ufsc.barcodescanner.service.model.Barcode;
 import br.ufsc.barcodescanner.utils.TimestampConverter;
-import br.ufsc.barcodescanner.database.AppDatabase;
 
 public class BarcodeRepository {
 
@@ -18,20 +18,16 @@ public class BarcodeRepository {
         this.database = DatabaseHelper.getInstance(context);
     }
 
-    public Barcode[] loadBarcodes(Date lastDate, int pageLength) {
-        String now = TimestampConverter.dateToTimestamp(lastDate);
-        return database.itemDao().loadBarcodes(now, pageLength);
-    }
+        public List<Barcode> loadBarcodes(Date lastDate, int pageLength) {
+            String now = TimestampConverter.dateToTimestamp(lastDate);
+            return database.itemDao().loadBarcodes(now, pageLength);
+        }
 
     public void saveBarcode(String barcodeValue) {
         Barcode barcode = new Barcode();
         barcode.barcodeValue = barcodeValue;
         barcode.createDate = new Date();
         database.itemDao().insertBarcode(barcode);
-    }
-
-    public Barcode[] loadBarcodes() {
-        return database.itemDao().loadAllBarcodes();
     }
 
     public void delete(Barcode barcode) {

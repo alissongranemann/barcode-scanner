@@ -1,9 +1,7 @@
-package br.ufsc.barcodescanner.database;
+package br.ufsc.barcodescanner.service.database;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
-
-import br.ufsc.barcodescanner.database.AppDatabase;
 
 public class DatabaseHelper {
 

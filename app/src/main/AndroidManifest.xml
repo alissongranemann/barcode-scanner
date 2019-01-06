@@ -18,15 +18,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BarcodeScanner">
 
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".view.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.ScannedItemActivity"></activity>
-        <activity android:name=".ui.ImageDetailActivity" />
+        <activity android:name=".view.ui.ScannedItemActivity"></activity>
+        <activity android:name=".view.ui.ImageDetailActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

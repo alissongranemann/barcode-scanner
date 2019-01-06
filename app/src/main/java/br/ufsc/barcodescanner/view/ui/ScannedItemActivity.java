@@ -1,5 +1,6 @@
-package br.ufsc.barcodescanner.ui;
+package br.ufsc.barcodescanner.view.ui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +25,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
-import br.ufsc.barcodescanner.repository.BarcodeRepository;
+import br.ufsc.barcodescanner.service.model.ImageSource;
+import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
+import br.ufsc.barcodescanner.view.adapter.ImageListViewAdapter;
+import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
 public class ScannedItemActivity extends AppCompatActivity {
 
@@ -34,7 +37,7 @@ public class ScannedItemActivity extends AppCompatActivity {
 
     private String barcodeValue;
     private String currentPhotoPath;
-    private BarcodeRepository repository;
+    private BarcodeViewModel viewModel;
 
     private ImageListViewAdapter adapter;
     private ArrayList<ImageSource> imageSources;
@@ -57,6 +60,9 @@ public class ScannedItemActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.barcode_value);
         textView.setText(message);
 
+        viewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
+        viewModel.setRepository(new BarcodeRepository(this));
+        viewModel.init();
 
         RecyclerView recyclerView = findViewById(R.id.imagegallery);
         recyclerView.setHasFixedSize(true);
@@ -68,14 +74,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         FloatingActionButton fab = findViewById(R.id.take_photo_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ScannedItemActivity.this.dispatchTakePictureIntent();
-            }
-        });
-
-        repository = new BarcodeRepository(this);
+        fab.setOnClickListener(view -> ScannedItemActivity.this.dispatchTakePictureIntent());
     }
 
     // Menu icons are inflated just as they were with actionbar
@@ -95,7 +94,7 @@ public class ScannedItemActivity extends AppCompatActivity {
                 //TODO save item
                 Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
                         Toast.LENGTH_SHORT).show();
-                insertBarcode();
+                viewModel.insert(this.barcodeValue);
                 super.onBackPressed();
                 return true;
             case android.R.id.home:
@@ -104,10 +103,6 @@ public class ScannedItemActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void insertBarcode() {
-        repository.saveBarcode(this.barcodeValue);
     }
 
     @Override

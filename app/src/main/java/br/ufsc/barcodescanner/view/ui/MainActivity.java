@@ -1,5 +1,6 @@
-package br.ufsc.barcodescanner.ui;
+package br.ufsc.barcodescanner.view.ui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ufsc.barcodescanner.R;
+import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
+import br.ufsc.barcodescanner.view.FragmentLifecycle;
+import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        //TODO switch tabs: camera is overlaying the list view
+
         adapter.addFragment(new ScannerFragment(), "SCANNER");
-        adapter.addFragment(new ItemFragment(), "LIST");
+        adapter.addFragment(new ItemListFragment(), "LIST");
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 

@@ -1,6 +1,7 @@
-package br.ufsc.barcodescanner.ui;
+package br.ufsc.barcodescanner.view.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,8 +16,12 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import br.ufsc.barcodescanner.R;
+import br.ufsc.barcodescanner.view.BarcodeScannedHandler;
+import br.ufsc.barcodescanner.view.FragmentLifecycle;
+import br.ufsc.barcodescanner.view.scanner.BarcodeProcessor;
+import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
-public class ScannerFragment extends Fragment implements FragmentLifecycle {
+public class ScannerFragment extends Fragment implements FragmentLifecycle, BarcodeScannedHandler {
 
     public static final String BARCODE_VALUE = "br.ufsc.barcodescanner.BARCODE_VALUE";
     private static final String TAG = "ScannerFragment";
@@ -56,7 +61,7 @@ public class ScannerFragment extends Fragment implements FragmentLifecycle {
             barcodeDetector = new BarcodeDetector.Builder(context)
                     .setBarcodeFormats(Barcode.ALL_FORMATS)
                     .build();
-            barcodeDetector.setProcessor(new BarcodeProcessor(context));
+            barcodeDetector.setProcessor(new BarcodeProcessor(this));
 
             cameraSource = new CameraSource.Builder(context, barcodeDetector)
                     .setAutoFocusEnabled(true)
@@ -88,4 +93,10 @@ public class ScannerFragment extends Fragment implements FragmentLifecycle {
         initSource();
     }
 
+    @Override
+    public void handle(String barcode) {
+        Intent intent = new Intent(this.getActivity(), ScannedItemActivity.class);
+        intent.putExtra(ScannerFragment.BARCODE_VALUE, barcode);
+        startActivity(intent);
+    }
 }

@@ -1,10 +1,10 @@
-package br.ufsc.barcodescanner.database;
+package br.ufsc.barcodescanner.service.database;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
-import br.ufsc.barcodescanner.entity.Barcode;
-import br.ufsc.barcodescanner.database.dao.BarcodeDao;
+import br.ufsc.barcodescanner.service.database.dao.BarcodeDao;
+import br.ufsc.barcodescanner.service.model.Barcode;
 
 @Database(entities = {Barcode.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
