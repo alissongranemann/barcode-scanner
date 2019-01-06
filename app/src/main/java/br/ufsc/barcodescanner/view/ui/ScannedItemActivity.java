@@ -56,6 +56,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String message = intent.getStringExtra(ScannerFragment.BARCODE_VALUE);
         this.barcodeValue = message;
+        //TODO: check if this barcode is already saved
         // Capture the layout's TextView and set the string as its text
         TextView textView = findViewById(R.id.barcode_value);
         textView.setText(message);

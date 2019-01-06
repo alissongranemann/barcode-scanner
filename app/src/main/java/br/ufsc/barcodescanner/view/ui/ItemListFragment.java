@@ -3,6 +3,7 @@ package br.ufsc.barcodescanner.view.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -62,7 +63,15 @@ public class ItemListFragment extends Fragment implements FragmentLifecycle {
 
             return true;
         });
+
+        FloatingActionButton fab = v.findViewById(R.id.sync_fab);
+        fab.setOnClickListener(view -> this.syncList());
+
         return v;
+    }
+
+    //TODO:
+    private void syncList() {
     }
 
     @Override
