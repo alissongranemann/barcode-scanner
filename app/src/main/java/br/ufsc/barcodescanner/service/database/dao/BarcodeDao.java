@@ -1,6 +1,5 @@
 package br.ufsc.barcodescanner.service.database.dao;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -26,4 +25,9 @@ public interface BarcodeDao {
     @Query("SELECT * FROM barcode")
     List<Barcode> loadAllBarcodes();
 
+    @Query("SELECT * FROM barcode WHERE barcode_value = :barcodeValue")
+    Barcode fetchBarcode(String barcodeValue);
+
+    @Query("DELETE FROM barcode WHERE barcode_value = :barcodeValue")
+    void deleteBarcode(String barcodeValue);
 }

@@ -3,28 +3,28 @@ package br.ufsc.barcodescanner.service.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ImageSource implements Parcelable {
+public class PictureSource implements Parcelable {
 
-    public static final Creator<ImageSource> CREATOR = new Creator<ImageSource>() {
+    public static final Creator<PictureSource> CREATOR = new Creator<PictureSource>() {
         @Override
-        public ImageSource createFromParcel(Parcel in) {
-            return new ImageSource(in);
+        public PictureSource createFromParcel(Parcel in) {
+            return new PictureSource(in);
         }
 
         @Override
-        public ImageSource[] newArray(int size) {
-            return new ImageSource[size];
+        public PictureSource[] newArray(int size) {
+            return new PictureSource[size];
         }
     };
     private String location;
     private int index;
 
-    public ImageSource(String path, int index) {
+    public PictureSource(String path, int index) {
         this.location = path;
         this.index = index;
     }
 
-    protected ImageSource(Parcel in) {
+    protected PictureSource(Parcel in) {
         location = in.readString();
     }
 

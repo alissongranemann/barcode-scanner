@@ -18,10 +18,10 @@ public class BarcodeRepository {
         this.database = DatabaseHelper.getInstance(context);
     }
 
-        public List<Barcode> loadBarcodes(Date lastDate, int pageLength) {
-            String now = TimestampConverter.dateToTimestamp(lastDate);
-            return database.itemDao().loadBarcodes(now, pageLength);
-        }
+    public List<Barcode> loadBarcodes(Date lastDate, int pageLength) {
+        String now = TimestampConverter.dateToTimestamp(lastDate);
+        return database.itemDao().loadBarcodes(now, pageLength);
+    }
 
     public void saveBarcode(String barcodeValue) {
         Barcode barcode = new Barcode();
@@ -32,5 +32,13 @@ public class BarcodeRepository {
 
     public void delete(Barcode barcode) {
         this.database.itemDao().deleteBarcode(barcode);
+    }
+
+    public Barcode fetchBarcode(String barcodeValue) {
+        return database.itemDao().fetchBarcode(barcodeValue);
+    }
+
+    public void delete(String barcodeValue) {
+        this.database.itemDao().deleteBarcode(barcodeValue);
     }
 }

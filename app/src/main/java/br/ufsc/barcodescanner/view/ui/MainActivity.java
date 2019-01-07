@@ -1,6 +1,5 @@
 package br.ufsc.barcodescanner.view.ui;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,9 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ufsc.barcodescanner.R;
-import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
 import br.ufsc.barcodescanner.view.FragmentLifecycle;
-import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
 public class MainActivity extends AppCompatActivity {
 

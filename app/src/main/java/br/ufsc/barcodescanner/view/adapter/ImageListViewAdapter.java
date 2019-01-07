@@ -20,17 +20,17 @@ import java.io.File;
 import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
-import br.ufsc.barcodescanner.service.model.ImageSource;
+import br.ufsc.barcodescanner.service.model.PictureSource;
 import br.ufsc.barcodescanner.view.ui.ImageDetailActivity;
 
 public class ImageListViewAdapter extends RecyclerView.Adapter<ImageListViewAdapter.ViewHolder> {
 
     private static final String TAG = "ImageListViewAdapter";
 
-    private ArrayList<ImageSource> galleryList;
+    private ArrayList<PictureSource> galleryList;
     private Context context;
 
-    public ImageListViewAdapter(Context context, ArrayList<ImageSource> galleryList) {
+    public ImageListViewAdapter(Context context, ArrayList<PictureSource> galleryList) {
         this.galleryList = galleryList;
         this.context = context;
     }
@@ -88,9 +88,9 @@ public class ImageListViewAdapter extends RecyclerView.Adapter<ImageListViewAdap
         public void onClick(View v) {
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
-                ImageSource imageSource = galleryList.get(position);
+                PictureSource pictureSource = galleryList.get(position);
                 Intent intent = new Intent(context, ImageDetailActivity.class);
-                intent.putExtra(ImageDetailActivity.EXTRA_SPACE_PHOTO, imageSource);
+                intent.putExtra(ImageDetailActivity.EXTRA_SPACE_PHOTO, pictureSource);
                 context.startActivity(intent);
             }
         }

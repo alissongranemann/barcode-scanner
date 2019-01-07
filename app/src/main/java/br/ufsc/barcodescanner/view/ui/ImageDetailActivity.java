@@ -14,13 +14,13 @@ import com.bumptech.glide.Glide;
 import java.io.File;
 
 import br.ufsc.barcodescanner.R;
-import br.ufsc.barcodescanner.service.model.ImageSource;
+import br.ufsc.barcodescanner.service.model.PictureSource;
 
 public class ImageDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_SPACE_PHOTO = "ImageDetailActivity.SPACE_PHOTO";
     public static final String PHOTO_REMOVED_NOTIFIER = "ImageDetailActivity.PHOTO_REMOVED_NOTIFIER";
-    private ImageSource spacePhoto;
+    private PictureSource spacePhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

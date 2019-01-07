@@ -2,8 +2,8 @@ package br.ufsc.barcodescanner.viewmodel;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.os.AsyncTask;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -44,11 +44,37 @@ public class BarcodeViewModel extends ViewModel {
     public void delete(int index) {
         List<Barcode> barcodes = getBarcodes().getValue();
         this.repository.delete(barcodes.get(index));
-        reload();
     }
 
     public void insert(String barcodeValue) {
-        repository.saveBarcode(barcodeValue);
+        AsyncTask<String, Void, Void> insertTask = new InsertTask();
+        insertTask.execute(barcodeValue);
+    }
+
+    public boolean hasBarcode(String barcodeValue) {
+        Barcode barcode = repository.fetchBarcode(barcodeValue);
+        return barcode != null;
+    }
+
+    public void delete(String barcodeValue) {
+        this.repository.delete(barcodeValue);
         reload();
     }
+
+    private class InsertTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            repository.saveBarcode(strings[0]);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            reload();
+        }
+    }
+
 }
