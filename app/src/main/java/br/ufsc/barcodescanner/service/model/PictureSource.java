@@ -5,23 +5,10 @@ import android.os.Parcelable;
 
 public class PictureSource implements Parcelable {
 
-    public static final Creator<PictureSource> CREATOR = new Creator<PictureSource>() {
-        @Override
-        public PictureSource createFromParcel(Parcel in) {
-            return new PictureSource(in);
-        }
-
-        @Override
-        public PictureSource[] newArray(int size) {
-            return new PictureSource[size];
-        }
-    };
     private String location;
-    private int index;
 
-    public PictureSource(String path, int index) {
+    public PictureSource(String path) {
         this.location = path;
-        this.index = index;
     }
 
     protected PictureSource(Parcel in) {
@@ -42,7 +29,16 @@ public class PictureSource implements Parcelable {
         dest.writeString(location);
     }
 
-    public int getIndex() {
-        return index;
-    }
+
+    public static final Creator<PictureSource> CREATOR = new Creator<PictureSource>() {
+        @Override
+        public PictureSource createFromParcel(Parcel in) {
+            return new PictureSource(in);
+        }
+
+        @Override
+        public PictureSource[] newArray(int size) {
+            return new PictureSource[size];
+        }
+    };
 }

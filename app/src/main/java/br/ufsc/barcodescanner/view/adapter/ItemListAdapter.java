@@ -41,10 +41,4 @@ public class ItemListAdapter extends ArrayAdapter<Barcode> {
 
     }
 
-    public void setBarcodes(List<Barcode> barcodes) {
-        Log.d("ItemListAdapter", "Loading barcodes, size: " + barcodes.size());
-        this.barcodes = barcodes;
-        this.notifyDataSetChanged();
-    }
-
 }

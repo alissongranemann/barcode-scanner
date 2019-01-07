@@ -1,7 +1,6 @@
 package br.ufsc.barcodescanner.view.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,7 +26,7 @@ import java.util.ArrayList;
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
 import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
-import br.ufsc.barcodescanner.view.adapter.ImageListViewAdapter;
+import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
 import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
 public class ScannedItemActivity extends AppCompatActivity {
@@ -39,7 +38,7 @@ public class ScannedItemActivity extends AppCompatActivity {
     private String currentPhotoPath;
     private BarcodeViewModel viewModel;
 
-    private ImageListViewAdapter adapter;
+    private PictureListViewAdapter adapter;
     private ArrayList<PictureSource> pictureSources;
     private boolean duplicated = false;
 
@@ -62,7 +61,6 @@ public class ScannedItemActivity extends AppCompatActivity {
         viewModel.setRepository(new BarcodeRepository(this));
         viewModel.init();
 
-        //TODO: check if this barcode is already saved
         // Capture the layout's TextView and set the string as its text
         TextView textView = findViewById(R.id.barcode_value);
         textView.setText(message);
@@ -73,7 +71,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         this.pictureSources = prepareData();
-        this.adapter = new ImageListViewAdapter(getApplicationContext(), pictureSources);
+        this.adapter = new PictureListViewAdapter(getApplicationContext(), pictureSources);
         recyclerView.setAdapter(adapter);
 
         FloatingActionButton fab = findViewById(R.id.take_photo_fab);
@@ -81,7 +79,7 @@ public class ScannedItemActivity extends AppCompatActivity {
 
         if (viewModel.hasBarcode(barcodeValue)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Já existe este código de barras na base de dados. Deseja sobrescrever?")
+            builder.setMessage(R.string.overwrite_message)
                     .setPositiveButton(R.string.ok, (dialog, id) -> {
                         adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
                         clearPictureDir();
@@ -154,9 +152,8 @@ public class ScannedItemActivity extends AppCompatActivity {
 
         File f = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
         File file[] = f.listFiles();
-        //TODO leave like this or overwrite? if doesn't overwrite this can't be deleted at onBackPressed
         for (int i = 0; i < file.length; i++) {
-            PictureSource pictureSource = new PictureSource(file[i].getAbsolutePath(), i);
+            PictureSource pictureSource = new PictureSource(file[i].getAbsolutePath());
             images.add(pictureSource);
         }
 
@@ -208,7 +205,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Log.d(TAG, "Reloading recycler view.");
             int index = pictureSources.size();
-            PictureSource pictureSource = new PictureSource(currentPhotoPath, index);
+            PictureSource pictureSource = new PictureSource(currentPhotoPath);
             pictureSources.add(pictureSource);
 
             adapter.notifyItemInserted(index);

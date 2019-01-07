@@ -20,25 +20,25 @@ public class BarcodeRepository {
 
     public List<Barcode> loadBarcodes(Date lastDate, int pageLength) {
         String now = TimestampConverter.dateToTimestamp(lastDate);
-        return database.itemDao().loadBarcodes(now, pageLength);
+        return database.itemDao().loadPage(now, pageLength);
     }
 
     public void saveBarcode(String barcodeValue) {
         Barcode barcode = new Barcode();
         barcode.barcodeValue = barcodeValue;
         barcode.createDate = new Date();
-        database.itemDao().insertBarcode(barcode);
+        database.itemDao().insert(barcode);
     }
 
     public void delete(Barcode barcode) {
-        this.database.itemDao().deleteBarcode(barcode);
+        this.database.itemDao().delete(barcode);
     }
 
     public Barcode fetchBarcode(String barcodeValue) {
-        return database.itemDao().fetchBarcode(barcodeValue);
+        return database.itemDao().fetch(barcodeValue);
     }
 
     public void delete(String barcodeValue) {
-        this.database.itemDao().deleteBarcode(barcodeValue);
+        this.database.itemDao().delete(barcodeValue);
     }
 }

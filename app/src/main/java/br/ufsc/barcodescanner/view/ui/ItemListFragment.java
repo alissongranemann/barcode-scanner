@@ -49,7 +49,6 @@ public class ItemListFragment extends Fragment implements FragmentLifecycle {
         View v = inflater.inflate(R.layout.fragment_item_list, container, false);
         listView = v.findViewById(R.id.listView);
         emptyView = v.findViewById(R.id.empty_message);
-        //TODO: remove item from view
         listView.setOnItemLongClickListener((parent, view, position, id) -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(ItemListFragment.this.getActivity());
             builder.setMessage(R.string.dialog_delete_item_message)
@@ -69,7 +68,7 @@ public class ItemListFragment extends Fragment implements FragmentLifecycle {
         return v;
     }
 
-    //TODO:
+    //TODO: sync
     private void syncList() {
     }
 

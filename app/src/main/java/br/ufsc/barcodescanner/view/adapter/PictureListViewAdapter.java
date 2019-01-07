@@ -21,28 +21,28 @@ import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
-import br.ufsc.barcodescanner.view.ui.ImageDetailActivity;
+import br.ufsc.barcodescanner.view.ui.PictureDetailActivity;
 
-public class ImageListViewAdapter extends RecyclerView.Adapter<ImageListViewAdapter.ViewHolder> {
+public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListViewAdapter.ViewHolder> {
 
-    private static final String TAG = "ImageListViewAdapter";
+    private static final String TAG = "PictureListViewAdapter";
 
     private ArrayList<PictureSource> galleryList;
     private Context context;
 
-    public ImageListViewAdapter(Context context, ArrayList<PictureSource> galleryList) {
+    public PictureListViewAdapter(Context context, ArrayList<PictureSource> galleryList) {
         this.galleryList = galleryList;
         this.context = context;
     }
 
     @Override
-    public ImageListViewAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public PictureListViewAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_layout, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ImageListViewAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(PictureListViewAdapter.ViewHolder viewHolder, int i) {
         File file = new File(galleryList.get(i).getImageLocation());
         Uri imageUri = Uri.fromFile(file);
         final ImageView imageView = viewHolder.img;
@@ -89,8 +89,8 @@ public class ImageListViewAdapter extends RecyclerView.Adapter<ImageListViewAdap
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
                 PictureSource pictureSource = galleryList.get(position);
-                Intent intent = new Intent(context, ImageDetailActivity.class);
-                intent.putExtra(ImageDetailActivity.EXTRA_SPACE_PHOTO, pictureSource);
+                Intent intent = new Intent(context, PictureDetailActivity.class);
+                intent.putExtra(PictureDetailActivity.EXTRA_SPACE_PHOTO, pictureSource);
                 context.startActivity(intent);
             }
         }

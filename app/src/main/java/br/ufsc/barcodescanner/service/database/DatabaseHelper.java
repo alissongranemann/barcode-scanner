@@ -15,7 +15,7 @@ public class DatabaseHelper {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     AppDatabase.class, AppDatabase.DATABASE_NAME)
-                    .allowMainThreadQueries()
+                    .allowMainThreadQueries() //TODO remove
                     .build();
         }
 

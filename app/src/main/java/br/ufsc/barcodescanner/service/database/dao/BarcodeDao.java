@@ -14,20 +14,18 @@ import br.ufsc.barcodescanner.service.model.Barcode;
 public interface BarcodeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertBarcode(Barcode barcode);
+    void insert(Barcode barcode);
 
     @Delete
-    void deleteBarcode(Barcode barcode);
-
-    @Query("SELECT * FROM barcode WHERE created_date > date(:lastDate) ORDER BY created_date DESC LIMIT :pageLength")
-    List<Barcode> loadBarcodes(String lastDate, int pageLength);
-
-    @Query("SELECT * FROM barcode")
-    List<Barcode> loadAllBarcodes();
-
-    @Query("SELECT * FROM barcode WHERE barcode_value = :barcodeValue")
-    Barcode fetchBarcode(String barcodeValue);
+    void delete(Barcode barcode);
 
     @Query("DELETE FROM barcode WHERE barcode_value = :barcodeValue")
-    void deleteBarcode(String barcodeValue);
+    void delete(String barcodeValue);
+
+    @Query("SELECT * FROM barcode WHERE created_date > date(:lastDate) ORDER BY created_date DESC LIMIT :pageLength")
+    List<Barcode> loadPage(String lastDate, int pageLength);
+
+    @Query("SELECT * FROM barcode WHERE barcode_value = :barcodeValue")
+    Barcode fetch(String barcodeValue);
+
 }

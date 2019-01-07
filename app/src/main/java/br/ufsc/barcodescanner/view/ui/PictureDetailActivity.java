@@ -1,6 +1,5 @@
 package br.ufsc.barcodescanner.view.ui;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +15,9 @@ import java.io.File;
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
 
-public class ImageDetailActivity extends AppCompatActivity {
+public class PictureDetailActivity extends AppCompatActivity {
 
-    public static final String EXTRA_SPACE_PHOTO = "ImageDetailActivity.SPACE_PHOTO";
-    public static final String PHOTO_REMOVED_NOTIFIER = "ImageDetailActivity.PHOTO_REMOVED_NOTIFIER";
+    public static final String EXTRA_SPACE_PHOTO = "PictureDetailActivity.SPACE_PHOTO";
     private PictureSource spacePhoto;
 
     @Override
@@ -55,22 +53,18 @@ public class ImageDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.image_detail_action_delete:
-                AlertDialog.Builder builder = new AlertDialog.Builder(ImageDetailActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(PictureDetailActivity.this);
                 builder.setMessage(R.string.dialog_delete_img_message)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                File img = new File(spacePhoto.getImageLocation());
-                                if (img.exists()) {
-                                    //TODO update recycler view
-                                    img.delete();
-                                }
-                                ImageDetailActivity.super.onBackPressed();
+                        .setPositiveButton(R.string.ok, (dialog, id) -> {
+                            File img = new File(spacePhoto.getImageLocation());
+                            if (img.exists()) {
+                                //TODO update recycler view
+                                img.delete();
                             }
+                            PictureDetailActivity.super.onBackPressed();
                         })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // Do nothing
-                            }
+                        .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                            // Do nothing
                         }).show();
                 return true;
             case android.R.id.home:

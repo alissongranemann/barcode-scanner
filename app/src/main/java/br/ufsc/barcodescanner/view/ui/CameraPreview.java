@@ -24,7 +24,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     private static final int REQUEST_CAMERA_PERMISSION = 201;
     private static final String TAG = "CameraPreview";
-    private BarcodeDetector detector; //TODO test
+    private BarcodeDetector detector;
 
     private SurfaceHolder holder;
     private CameraSource cameraSource;
@@ -38,7 +38,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         this.cameraSource = cameraSource;
     }
 
-    //TODO test
     public CameraPreview(Context context, CameraSource cameraSource, BarcodeDetector barcodeDetector) {
         this(context, cameraSource);
         this.detector = barcodeDetector;
