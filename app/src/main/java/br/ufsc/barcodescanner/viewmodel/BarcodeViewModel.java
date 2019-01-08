@@ -41,9 +41,9 @@ public class BarcodeViewModel extends ViewModel {
         barcodes.setValue(repository.loadBarcodes(new Date(), 10));
     }
 
-    public void delete(int index) {
-        List<Barcode> barcodes = getBarcodes().getValue();
-        this.repository.delete(barcodes.get(index));
+    public void delete(Barcode barcode) {
+        this.repository.delete(barcode);
+        reload();
     }
 
     public void insert(String barcodeValue) {

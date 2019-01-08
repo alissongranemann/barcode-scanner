@@ -19,7 +19,6 @@ import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.view.BarcodeScannedHandler;
 import br.ufsc.barcodescanner.view.FragmentLifecycle;
 import br.ufsc.barcodescanner.view.scanner.BarcodeProcessor;
-import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
 public class ScannerFragment extends Fragment implements FragmentLifecycle, BarcodeScannedHandler {
 

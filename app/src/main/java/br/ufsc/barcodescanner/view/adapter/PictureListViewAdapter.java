@@ -37,7 +37,7 @@ public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListView
 
     @Override
     public PictureListViewAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_layout, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.picture_list_cell, viewGroup, false);
         return new ViewHolder(view);
     }
 

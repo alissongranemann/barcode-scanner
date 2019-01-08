@@ -12,8 +12,8 @@ import br.ufsc.barcodescanner.utils.TimestampConverter;
 
 @Entity(tableName = "barcode",
         indices = {
-            @Index(name = "barcode_index", value = {"barcode_value"})
-    })
+                @Index(name = "barcode_index", value = {"barcode_value"})
+        })
 public class Barcode {
 
     @PrimaryKey(autoGenerate = true)

@@ -5,6 +5,17 @@ import android.os.Parcelable;
 
 public class PictureSource implements Parcelable {
 
+    public static final Creator<PictureSource> CREATOR = new Creator<PictureSource>() {
+        @Override
+        public PictureSource createFromParcel(Parcel in) {
+            return new PictureSource(in);
+        }
+
+        @Override
+        public PictureSource[] newArray(int size) {
+            return new PictureSource[size];
+        }
+    };
     private String location;
 
     public PictureSource(String path) {
@@ -28,17 +39,4 @@ public class PictureSource implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(location);
     }
-
-
-    public static final Creator<PictureSource> CREATOR = new Creator<PictureSource>() {
-        @Override
-        public PictureSource createFromParcel(Parcel in) {
-            return new PictureSource(in);
-        }
-
-        @Override
-        public PictureSource[] newArray(int size) {
-            return new PictureSource[size];
-        }
-    };
 }
