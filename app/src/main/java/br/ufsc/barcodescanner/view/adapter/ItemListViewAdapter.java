@@ -1,6 +1,5 @@
 package br.ufsc.barcodescanner.view.adapter;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,12 +16,10 @@ import br.ufsc.barcodescanner.view.OnItemLongClickListener;
 
 public class ItemListViewAdapter extends RecyclerView.Adapter<ItemListViewAdapter.ViewHolder> {
 
-    private Activity context;
     private List<Barcode> barcodes;
     private OnItemLongClickListener onItemLongClickListener;
 
-    public ItemListViewAdapter(Activity context, List<Barcode> barcodes, OnItemLongClickListener onItemLongClickListener) {
-        this.context = context;
+    public ItemListViewAdapter(List<Barcode> barcodes, OnItemLongClickListener onItemLongClickListener) {
         this.barcodes = barcodes;
         this.onItemLongClickListener = onItemLongClickListener;
     }
@@ -54,9 +51,9 @@ public class ItemListViewAdapter extends RecyclerView.Adapter<ItemListViewAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private View view;
         public TextView barcodeValue;
         public TextView imgCount;
+        private View view;
 
         public ViewHolder(View view) {
             super(view);

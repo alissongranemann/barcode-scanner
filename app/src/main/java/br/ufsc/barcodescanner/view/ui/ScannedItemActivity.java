@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
 import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
+import br.ufsc.barcodescanner.utils.ViewModelFactory;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
 import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
@@ -57,9 +58,8 @@ public class ScannedItemActivity extends AppCompatActivity {
         String message = intent.getStringExtra(ScannerFragment.BARCODE_VALUE);
         this.barcodeValue = message;
 
-        viewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
-        viewModel.setRepository(new BarcodeRepository(this));
-        viewModel.init();
+        ViewModelFactory viewModelFactory = new ViewModelFactory(new BarcodeRepository(this));
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BarcodeViewModel.class);
 
         // Capture the layout's TextView and set the string as its text
         TextView textView = findViewById(R.id.barcode_value);

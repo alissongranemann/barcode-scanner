@@ -12,20 +12,17 @@ import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
 
 public class BarcodeViewModel extends ViewModel {
 
+
     private MutableLiveData<List<Barcode>> barcodes;
 
     private BarcodeRepository repository;
 
-    //TODO: Inject
-    //    public BarcodeViewModel(BarcodeRepository repository) {
-    //        this.repository = repository;
-    //    }
-
-    public void setRepository(BarcodeRepository repository) {
+    public BarcodeViewModel(BarcodeRepository repository) {
         this.repository = repository;
+        init();
     }
 
-    public void init() {
+    private void init() {
         if (barcodes != null) {
             return;
         }

@@ -17,6 +17,7 @@ import java.util.List;
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.Barcode;
 import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
+import br.ufsc.barcodescanner.utils.ViewModelFactory;
 import br.ufsc.barcodescanner.view.FragmentLifecycle;
 import br.ufsc.barcodescanner.view.OnItemLongClickListener;
 import br.ufsc.barcodescanner.view.adapter.ItemListViewAdapter;
@@ -41,9 +42,8 @@ public class ItemListFragment extends Fragment implements FragmentLifecycle, OnI
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        viewModel = ViewModelProviders.of(this.getActivity()).get(BarcodeViewModel.class);
-        viewModel.setRepository(new BarcodeRepository(this.getActivity()));
-        viewModel.init();
+        ViewModelFactory viewModelFactory = new ViewModelFactory(new BarcodeRepository(this.getActivity()));
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BarcodeViewModel.class);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ItemListFragment extends Fragment implements FragmentLifecycle, OnI
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
-        this.adapter = new ItemListViewAdapter(getActivity(), viewModel.getBarcodes().getValue(), this);
+        this.adapter = new ItemListViewAdapter(viewModel.getBarcodes().getValue(), this);
         recyclerView.setAdapter(adapter);
         emptyView = v.findViewById(R.id.empty_message);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
