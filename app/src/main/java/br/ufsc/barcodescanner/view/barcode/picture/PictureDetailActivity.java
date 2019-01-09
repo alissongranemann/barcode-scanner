@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.view.ui;
+package br.ufsc.barcodescanner.view.barcode.picture;
 
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -25,26 +25,12 @@ public class PictureDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_detail);
 
-        Toolbar myToolbar = findViewById(R.id.image_detail_toolbar);
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        ImageView mImageView = findViewById(R.id.image);
-        spacePhoto = getIntent().getParcelableExtra(EXTRA_SPACE_PHOTO);
-
-        Glide.with(this)
-                .load(spacePhoto.getImageLocation())
-                .asBitmap()
-                .error(R.drawable.ic_error)
-                .placeholder(R.drawable.ic_placeholder)
-                .into(mImageView);
+        setToolbar();
+        setPicture();
     }
 
-    // Menu icons are inflated just as they were with actionbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.image_detail_menu, menu);
         return true;
     }
@@ -58,7 +44,7 @@ public class PictureDetailActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.ok, (dialog, id) -> {
                             File img = new File(spacePhoto.getImageLocation());
                             if (img.exists()) {
-                                //TODO update recycler view
+                                //TODO: update recycler view
                                 img.delete();
                             }
                             PictureDetailActivity.super.onBackPressed();
@@ -73,6 +59,25 @@ public class PictureDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setToolbar() {
+        Toolbar myToolbar = findViewById(R.id.image_detail_toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    private void setPicture() {
+        ImageView mImageView = findViewById(R.id.image);
+        spacePhoto = getIntent().getParcelableExtra(EXTRA_SPACE_PHOTO);
+
+        Glide.with(this)
+                .load(spacePhoto.getImageLocation())
+                .asBitmap()
+                .error(R.drawable.ic_error)
+                .placeholder(R.drawable.ic_placeholder)
+                .into(mImageView);
     }
 
 }

@@ -7,6 +7,7 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -18,15 +19,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BarcodeScanner">
 
-        <activity android:name=".view.ui.MainActivity">
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ui.ScannedItemActivity"></activity>
-        <activity android:name=".view.ui.PictureDetailActivity" />
+        <activity android:name=".view.barcode.item.ScannedItemActivity"></activity>
+        <activity android:name=".view.barcode.picture.PictureDetailActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

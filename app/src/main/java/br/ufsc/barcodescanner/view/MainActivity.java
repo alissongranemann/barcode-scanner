@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.view.ui;
+package br.ufsc.barcodescanner.view;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ufsc.barcodescanner.R;
-import br.ufsc.barcodescanner.view.FragmentLifecycle;
+import br.ufsc.barcodescanner.view.barcode.scanner.ScannerFragment;
+import br.ufsc.barcodescanner.view.barcode.list.BarcodeListFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(new ScannerFragment(), "SCANNER");
-        adapter.addFragment(new ItemListFragment(), "LIST");
+        adapter.addFragment(new BarcodeListFragment(), "LIST");
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 

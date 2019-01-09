@@ -1,8 +1,9 @@
-package br.ufsc.barcodescanner.view.ui;
+package br.ufsc.barcodescanner.view.barcode.scanner;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,7 +19,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.view.BarcodeScannedHandler;
 import br.ufsc.barcodescanner.view.FragmentLifecycle;
-import br.ufsc.barcodescanner.view.scanner.BarcodeProcessor;
+import br.ufsc.barcodescanner.view.barcode.item.ScannedItemActivity;
 
 public class ScannerFragment extends Fragment implements FragmentLifecycle, BarcodeScannedHandler {
 
@@ -66,7 +67,7 @@ public class ScannerFragment extends Fragment implements FragmentLifecycle, Barc
                     .setAutoFocusEnabled(true)
                     .build();
 
-            cameraPreview = new CameraPreview(context, cameraSource, barcodeDetector);
+            cameraPreview = new CameraPreview(context, cameraSource);
             frameLayout.addView(cameraPreview);
 
             initialised = true;
@@ -94,6 +95,9 @@ public class ScannerFragment extends Fragment implements FragmentLifecycle, Barc
 
     @Override
     public void handle(String barcode) {
+        Vibrator v = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(500);
+
         Intent intent = new Intent(this.getActivity(), ScannedItemActivity.class);
         intent.putExtra(ScannerFragment.BARCODE_VALUE, barcode);
         startActivity(intent);

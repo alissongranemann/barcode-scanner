@@ -4,6 +4,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 
+import com.google.android.gms.tasks.Task;
+
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
 public class BarcodeViewModel extends ViewModel {
 
 
+    private static final int PAGE_LENGTH = 10;
     private MutableLiveData<List<Barcode>> barcodes;
 
     private BarcodeRepository repository;
@@ -35,7 +38,8 @@ public class BarcodeViewModel extends ViewModel {
     }
 
     public void reload() {
-        barcodes.setValue(repository.loadBarcodes(new Date(), 10));
+        List<Barcode> barcodes = repository.loadBarcodes(new Date(), PAGE_LENGTH);
+        this.barcodes.setValue(barcodes);
     }
 
     public void delete(Barcode barcode) {
@@ -54,8 +58,11 @@ public class BarcodeViewModel extends ViewModel {
     }
 
     public void delete(String barcodeValue) {
-        this.repository.delete(barcodeValue);
-        reload();
+        AsyncTask<String, Void, Void> deleteTask = new DeleteTask();
+        deleteTask.execute(barcodeValue);
+    }
+
+    public void startSync() {
     }
 
     private class InsertTask extends AsyncTask<String, Void, Void> {
@@ -63,6 +70,22 @@ public class BarcodeViewModel extends ViewModel {
         @Override
         protected Void doInBackground(String... strings) {
             repository.saveBarcode(strings[0]);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            reload();
+        }
+    }
+
+    private class DeleteTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            repository.delete(strings[0]);
 
             return null;
         }

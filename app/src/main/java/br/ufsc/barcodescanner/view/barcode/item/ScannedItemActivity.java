@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.view.ui;
+package br.ufsc.barcodescanner.view.barcode.item;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -28,6 +28,7 @@ import br.ufsc.barcodescanner.service.model.PictureSource;
 import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
 import br.ufsc.barcodescanner.utils.ViewModelFactory;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
+import br.ufsc.barcodescanner.view.barcode.scanner.ScannerFragment;
 import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
 public class ScannedItemActivity extends AppCompatActivity {

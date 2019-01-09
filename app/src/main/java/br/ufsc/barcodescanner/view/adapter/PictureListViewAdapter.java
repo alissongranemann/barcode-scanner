@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
-import br.ufsc.barcodescanner.view.ui.PictureDetailActivity;
+import br.ufsc.barcodescanner.view.barcode.picture.PictureDetailActivity;
 
 public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListViewAdapter.ViewHolder> {
 
