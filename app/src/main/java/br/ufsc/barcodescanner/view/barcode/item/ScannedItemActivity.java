@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +15,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,29 +42,33 @@ public class ScannedItemActivity extends AppCompatActivity {
 
     private PictureListViewAdapter adapter;
     private ArrayList<PictureSource> pictureSources;
-    private boolean duplicated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanned_item);
 
+        Intent intent = getIntent();
+        this.barcodeValue  = intent.getStringExtra(ScannerFragment.BARCODE_VALUE);
+
+        ViewModelFactory viewModelFactory = new ViewModelFactory(new BarcodeRepository(this));
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BarcodeViewModel.class);
+
+        if (viewModel.hasBarcode(barcodeValue)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.overwrite_message)
+                    .setNeutralButton(R.string.ok, (dialog, id) -> {
+                        this.onBackPressed();
+                    }).show();
+        }
+
         Toolbar myToolbar = findViewById(R.id.scanned_item_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        // Get the Intent that started this activity and extract the string
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(ScannerFragment.BARCODE_VALUE);
-        this.barcodeValue = message;
-
-        ViewModelFactory viewModelFactory = new ViewModelFactory(new BarcodeRepository(this));
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BarcodeViewModel.class);
-
-        // Capture the layout's TextView and set the string as its text
-        TextView textView = findViewById(R.id.barcode_value);
-        textView.setText(message);
+        TextView mTitle = myToolbar.findViewById(R.id.scanned_item_toolbar_title);
+        mTitle.setText(barcodeValue);
 
         RecyclerView recyclerView = findViewById(R.id.imagegallery);
         recyclerView.setHasFixedSize(true);
@@ -72,46 +76,25 @@ public class ScannedItemActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         this.pictureSources = prepareData();
-        this.adapter = new PictureListViewAdapter(getApplicationContext(), pictureSources);
+        this.adapter = new PictureListViewAdapter(this, pictureSources);
         recyclerView.setAdapter(adapter);
 
         FloatingActionButton fab = findViewById(R.id.take_photo_fab);
         fab.setOnClickListener(view -> ScannedItemActivity.this.dispatchTakePictureIntent());
-
-        if (viewModel.hasBarcode(barcodeValue)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.overwrite_message)
-                    .setPositiveButton(R.string.ok, (dialog, id) -> {
-                        adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
-                        clearPictureDir();
-                        this.viewModel.delete(barcodeValue);
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                        this.duplicated = true;
-                        this.onBackPressed();
-                    }).show();
-        }
     }
 
-    // Menu icons are inflated just as they were with actionbar
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.scanned_item_menu, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_done:
-                Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
-                        Toast.LENGTH_SHORT).show();
-                viewModel.insert(this.barcodeValue);
-                super.onBackPressed();
-                return true;
+//            case R.id.action_done:
+//                Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
+//                        Toast.LENGTH_SHORT).show();
+//                viewModel.insert(this.barcodeValue);
+//                super.onBackPressed();
+//                return true;
             case android.R.id.home:
                 this.onBackPressed();
                 return true;
@@ -122,18 +105,23 @@ public class ScannedItemActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!duplicated && !this.pictureSources.isEmpty()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.dialog_exit_message)
-                    .setPositiveButton(R.string.ok, (dialog, id) -> {
-                        clearPictureDir();
-                        ScannedItemActivity.super.onBackPressed();
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                        // Do nothing
-                    }).show();
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStackImmediate();
         } else {
-            super.onBackPressed();
+            if (!this.pictureSources.isEmpty()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.dialog_exit_message)
+                        .setPositiveButton(R.string.ok, (dialog, id) -> {
+                            clearPictureDir();
+                            ScannedItemActivity.super.onBackPressed();
+                        })
+                        .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                            // Do nothing
+                        }).show();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 

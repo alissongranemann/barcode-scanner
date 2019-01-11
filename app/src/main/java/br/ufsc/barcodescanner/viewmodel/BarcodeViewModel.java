@@ -4,8 +4,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 
-import com.google.android.gms.tasks.Task;
-
 import java.util.Date;
 import java.util.List;
 

@@ -5,7 +5,7 @@
     <string name="item_saved">Item salvo!</string>
     <string name="dialog_exit_message">Você perderá os dados. Deseja realmente voltar?</string>
     <string name="dialog_exit_title">Cancelar</string>
-    <string name="ok">Sim</string>
+    <string name="positive">Sim</string>
     <string name="cancel">Não</string>
     <string name="dialog_delete_img_message">Deseja realmente excluir esta foto?</string>
     <string name="image_detail_toolbar_title">Foto</string>
@@ -14,4 +14,5 @@
     <string name="empty_list_message">Não há itens.</string>
     <string name="dialog_delete_item_message">Deseja realmente excluir este item?</string>
     <string name="overwrite_message">Já existe este código de barras na base de dados. Deseja sobrescrever?</string>
+    <string name="ok">Ok</string>
 </resources>

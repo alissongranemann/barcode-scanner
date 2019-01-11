@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.barcode.item.ScannedItemActivity"></activity>
-        <activity android:name=".view.barcode.picture.PictureDetailActivity" />
+        <activity android:name=".view.barcode.picture.PictureDetailFragment" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

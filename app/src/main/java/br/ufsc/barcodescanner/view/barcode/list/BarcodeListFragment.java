@@ -101,7 +101,7 @@ public class BarcodeListFragment extends Fragment implements FragmentLifecycle, 
     public void onItemClick(Barcode item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(BarcodeListFragment.this.getActivity());
         builder.setMessage(R.string.dialog_delete_item_message)
-                .setPositiveButton(R.string.ok, (dialog, id1) -> {
+                .setPositiveButton(R.string.positive, (dialog, id1) -> {
                     viewModel.delete(item);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id12) -> {

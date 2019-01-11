@@ -1,9 +1,12 @@
 package br.ufsc.barcodescanner.view.adapter;
 
 
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,18 +24,18 @@ import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
-import br.ufsc.barcodescanner.view.barcode.picture.PictureDetailActivity;
+import br.ufsc.barcodescanner.view.barcode.picture.PictureDetailFragment;
 
 public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListViewAdapter.ViewHolder> {
 
     private static final String TAG = "PictureListViewAdapter";
 
     private ArrayList<PictureSource> galleryList;
-    private Context context;
+    private AppCompatActivity activity;
 
-    public PictureListViewAdapter(Context context, ArrayList<PictureSource> galleryList) {
+    public PictureListViewAdapter(AppCompatActivity activity, ArrayList<PictureSource> galleryList) {
         this.galleryList = galleryList;
-        this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListView
         Uri imageUri = Uri.fromFile(file);
         final ImageView imageView = viewHolder.img;
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        Glide.with(context)
+        Glide.with(activity.getApplicationContext())
                 .load(imageUri)
                 .fitCenter()
                 .error(R.drawable.ic_error)
@@ -74,7 +77,7 @@ public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListView
         return galleryList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private ImageView img;
 
         public ViewHolder(View view) {
@@ -82,6 +85,7 @@ public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListView
 
             img = view.findViewById(R.id.img);
             img.setOnClickListener(this);
+            img.setOnLongClickListener(this);
         }
 
         @Override
@@ -89,10 +93,41 @@ public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListView
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
                 PictureSource pictureSource = galleryList.get(position);
-                Intent intent = new Intent(context, PictureDetailActivity.class);
-                intent.putExtra(PictureDetailActivity.EXTRA_SPACE_PHOTO, pictureSource);
-                context.startActivity(intent);
+                PictureDetailFragment detailFragment = new PictureDetailFragment();
+                Bundle bundle = new Bundle();
+
+                bundle.putParcelable(PictureDetailFragment.EXTRA_SPACE_PHOTO, pictureSource);
+                detailFragment.setArguments(bundle);
+
+                FragmentManager manager = activity.getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.scanned_item, detailFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                PictureSource pictureSource = galleryList.get(position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage(R.string.dialog_delete_img_message)
+                        .setPositiveButton(R.string.positive, (dialog, id) -> {
+                            File img = new File(pictureSource.getImageLocation());
+                            if (img.exists()) {
+                                img.delete();
+                                galleryList.remove(position);
+                                PictureListViewAdapter.this.notifyItemRangeRemoved(position, 1);
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                            // Do nothing
+                        }).show();
+                return true;
+            }
+            return false;
         }
     }
 

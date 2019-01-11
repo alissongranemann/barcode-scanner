@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ufsc.barcodescanner.R;
-import br.ufsc.barcodescanner.view.barcode.scanner.ScannerFragment;
 import br.ufsc.barcodescanner.view.barcode.list.BarcodeListFragment;
+import br.ufsc.barcodescanner.view.barcode.scanner.ScannerFragment;
 
 public class MainActivity extends AppCompatActivity {
 
