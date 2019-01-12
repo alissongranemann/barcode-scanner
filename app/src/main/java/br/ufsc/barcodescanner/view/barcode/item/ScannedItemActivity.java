@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
-import br.ufsc.barcodescanner.service.repository.SqliteBarcodeRepository;
 import br.ufsc.barcodescanner.utils.UUIDManager;
 import br.ufsc.barcodescanner.utils.ViewModelFactory;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
@@ -53,17 +52,19 @@ public class ScannedItemActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.barcodeValue = intent.getStringExtra(ScannerFragment.BARCODE_VALUE);
 
-        ViewModelFactory viewModelFactory = new ViewModelFactory(new SqliteBarcodeRepository(this));
+        ViewModelFactory viewModelFactory = new ViewModelFactory();
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(BarcodeViewModel.class);
 
-        if (viewModel.hasBarcode(barcodeValue)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.overwrite_message)
-                    .setNeutralButton(R.string.ok, (dialog, id) -> {
-                        this.duplicated = true;
-                        this.onBackPressed();
-                    }).show();
-        }
+        viewModel.hasBarcode(barcodeValue, hasChild -> {
+            if (hasChild) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.overwrite_message)
+                        .setNeutralButton(R.string.ok, (dialog, id) -> {
+                            this.duplicated = true;
+                            this.onBackPressed();
+                        }).show();
+            }
+        });
 
         Toolbar myToolbar = findViewById(R.id.scanned_item_toolbar);
         setSupportActionBar(myToolbar);

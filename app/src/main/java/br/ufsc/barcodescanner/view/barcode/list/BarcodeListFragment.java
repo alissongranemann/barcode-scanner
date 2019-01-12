@@ -18,7 +18,6 @@ import java.util.List;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.Barcode;
-import br.ufsc.barcodescanner.service.repository.SqliteBarcodeRepository;
 import br.ufsc.barcodescanner.utils.ViewModelFactory;
 import br.ufsc.barcodescanner.view.FragmentLifecycle;
 import br.ufsc.barcodescanner.view.OnItemLongClickListener;
@@ -40,7 +39,7 @@ public class BarcodeListFragment extends Fragment implements FragmentLifecycle, 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewModelFactory viewModelFactory = new ViewModelFactory(new SqliteBarcodeRepository(this.getActivity()));
+        ViewModelFactory viewModelFactory = new ViewModelFactory();
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(BarcodeViewModel.class);
     }
 
@@ -74,7 +73,7 @@ public class BarcodeListFragment extends Fragment implements FragmentLifecycle, 
     }
 
     private void createList(View view) {
-        this.adapter = new ItemListViewAdapter(viewModel.getBarcodes().getValue(), this);
+        this.adapter = new ItemListViewAdapter(this);
         TextView emptyView = view.findViewById(R.id.empty_message);
         RecyclerView recyclerView = view.findViewById(R.id.barcodeList);
 
@@ -89,11 +88,10 @@ public class BarcodeListFragment extends Fragment implements FragmentLifecycle, 
         fab.setOnClickListener(view -> this.syncList());
     }
 
-    //TODO: sync
     private void syncList() {
         Toast.makeText(this.getActivity().getApplicationContext(), "Sincronização iniciada!",
                 Toast.LENGTH_SHORT).show();
-        this.viewModel.startSync();
+        this.viewModel.reload();
     }
 
     private void refreshList(List<Barcode> barcodes) {

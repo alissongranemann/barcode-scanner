@@ -9,6 +9,7 @@ import java.util.Date;
 
 public class TimestampConverter {
     static DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    static DateFormat df_pt = new SimpleDateFormat("HH:mm - dd/MM/yyyy");
 
     @TypeConverter
     public static Date fromTimestamp(String value) {
@@ -27,6 +28,10 @@ public class TimestampConverter {
     @TypeConverter
     public static String dateToTimestamp(Date value) {
         return value == null ? null : df.format(value);
+    }
+
+    public static String dateToString(Date value) {
+        return value == null ? null : df_pt.format(value);
     }
 
 

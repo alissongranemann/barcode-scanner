@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.ufsc.barcodescanner.R;
@@ -19,8 +20,8 @@ public class ItemListViewAdapter extends RecyclerView.Adapter<ItemListViewAdapte
     private List<Barcode> barcodes;
     private OnItemLongClickListener onItemLongClickListener;
 
-    public ItemListViewAdapter(List<Barcode> barcodes, OnItemLongClickListener onItemLongClickListener) {
-        this.barcodes = barcodes;
+    public ItemListViewAdapter(OnItemLongClickListener onItemLongClickListener) {
+        barcodes = new ArrayList<>();
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
@@ -35,7 +36,7 @@ public class ItemListViewAdapter extends RecyclerView.Adapter<ItemListViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Barcode barcode = barcodes.get(i);
         viewHolder.barcodeValue.setText(barcode.value);
-        viewHolder.imgCount.setText(TimestampConverter.dateToTimestamp(barcode.createdAt));
+        viewHolder.imgCount.setText(TimestampConverter.dateToString(barcode.c));
         viewHolder.bind(barcode, onItemLongClickListener);
     }
 

@@ -10,7 +10,7 @@ import br.ufsc.barcodescanner.service.database.SqliteDatabase;
 import br.ufsc.barcodescanner.service.model.Barcode;
 import br.ufsc.barcodescanner.utils.TimestampConverter;
 
-public class SqliteBarcodeRepository implements BarcodeRepository {
+public class SqliteBarcodeRepository {
 
     private AppSqliteDatabase database;
 
@@ -26,8 +26,8 @@ public class SqliteBarcodeRepository implements BarcodeRepository {
     public void save(String barcodeValue, String uuid) {
         Barcode barcode = new Barcode();
         barcode.value = barcodeValue;
-        barcode.createdAt = new Date();
-        barcode.userUuid = uuid;
+        barcode.c = new Date();
+        barcode.u = uuid;
         barcode.synced = false;
         database.itemDao().insert(barcode);
     }

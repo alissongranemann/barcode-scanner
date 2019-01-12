@@ -2,27 +2,27 @@ package br.ufsc.barcodescanner.viewmodel;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.Date;
 import java.util.List;
 
 import br.ufsc.barcodescanner.service.model.Barcode;
-import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
 import br.ufsc.barcodescanner.service.repository.FirebaseBarcodeRepository;
 
 public class BarcodeViewModel extends ViewModel {
 
 
-    private static final int PAGE_LENGTH = 10;
-    private FirebaseBarcodeRepository firebaseRepository;
+    private FirebaseBarcodeRepository repository;
     private MutableLiveData<List<Barcode>> barcodes;
 
-    private BarcodeRepository repository;
-
-    public BarcodeViewModel(BarcodeRepository repository) {
-        this.repository = repository;
-        this.firebaseRepository = new FirebaseBarcodeRepository();
+    public BarcodeViewModel() {
+        this.repository = new FirebaseBarcodeRepository(new BarcodeChildEventListener());
     }
 
     public MutableLiveData<List<Barcode>> getBarcodes() {
@@ -35,72 +35,50 @@ public class BarcodeViewModel extends ViewModel {
 
     public void reload() {
         if (barcodes != null) {
-            List<Barcode> barcodes = repository.loadPage(new Date(), PAGE_LENGTH);
-            this.barcodes.setValue(barcodes);
+            repository.loadPage(new Date(), page -> barcodes.setValue(page));
         }
     }
 
     public void delete(Barcode barcode) {
         this.delete(barcode.value);
-        reload();
     }
 
     public void insert(String barcodeValue, String uuid) {
-        AsyncTask<String, Void, Void> insertTask = new InsertTask();
-        insertTask.execute(barcodeValue, uuid);
+        repository.save(barcodeValue, uuid, task -> reload());
     }
 
-    public boolean hasBarcode(String barcodeValue) {
-        return repository.hasBarcode(barcodeValue);
+    public void hasBarcode(String barcodeValue, FirebaseBarcodeRepository.HasBarcodeHandler handler) {
+        repository.hasBarcode(barcodeValue, handler);
     }
 
     public void delete(String barcodeValue) {
-        AsyncTask<String, Void, Void> deleteTask = new DeleteTask();
-        deleteTask.execute(barcodeValue);
+        repository.delete(barcodeValue, task -> reload());
     }
 
-    public void startSync() {
-        Date lastDate = new Date();
-        List<Barcode> barcodes;
-        do {
-            barcodes = repository.loadPage(lastDate, PAGE_LENGTH);
-            for (Barcode barcode : barcodes) {
-                this.firebaseRepository.save(barcode.value, barcode.userUuid);
-                lastDate = barcode.createdAt;
-            }
-        } while (barcodes.size() == PAGE_LENGTH);
-    }
-
-    private class InsertTask extends AsyncTask<String, Void, Void> {
+    private class BarcodeChildEventListener implements ChildEventListener {
 
         @Override
-        protected Void doInBackground(String... strings) {
-            repository.save(strings[0], strings[1]);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            Barcode value = dataSnapshot.getValue(Barcode.class);
             reload();
         }
-    }
-
-    private class DeleteTask extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected Void doInBackground(String... strings) {
-            repository.delete(strings[0]);
-
-            return null;
+        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
             reload();
         }
-    }
 
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+        }
+
+    }
 }

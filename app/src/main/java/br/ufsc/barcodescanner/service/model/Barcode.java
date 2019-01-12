@@ -28,10 +28,10 @@ public class Barcode {
 
     @ColumnInfo(name = "created_at")
     @TypeConverters({TimestampConverter.class})
-    public Date createdAt;
+    public Date c;
 
     @ColumnInfo(name = "user_uuid")
-    public String userUuid;
+    public String u;
 
     @Exclude
     @ColumnInfo(name = "synced")
