@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
+import br.ufsc.barcodescanner.view.barcode.item.ScannedItemActivity;
 import br.ufsc.barcodescanner.view.barcode.picture.PictureDetailFragment;
 
 public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListViewAdapter.ViewHolder> {
@@ -31,9 +33,9 @@ public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListView
     private static final String TAG = "PictureListViewAdapter";
 
     private ArrayList<PictureSource> galleryList;
-    private AppCompatActivity activity;
+    private ScannedItemActivity activity;
 
-    public PictureListViewAdapter(AppCompatActivity activity, ArrayList<PictureSource> galleryList) {
+    public PictureListViewAdapter(ScannedItemActivity activity, ArrayList<PictureSource> galleryList) {
         this.galleryList = galleryList;
         this.activity = activity;
     }
@@ -45,40 +47,47 @@ public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListView
     }
 
     @Override
-    public void onBindViewHolder(PictureListViewAdapter.ViewHolder viewHolder, int i) {
-        File file = new File(galleryList.get(i).getImageLocation());
-        Uri imageUri = Uri.fromFile(file);
-        final ImageView imageView = viewHolder.img;
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        Glide.with(activity.getApplicationContext())
-                .load(imageUri)
-                .fitCenter()
-                .error(R.drawable.ic_error)
-                .placeholder(R.drawable.ic_placeholder)
-                .listener(new RequestListener<Uri, GlideDrawable>() {
+    public void onBindViewHolder(PictureListViewAdapter.ViewHolder viewHolder, int position) {
+        ImageView imageView = viewHolder.img;
+        ImageView addButton = viewHolder.addButton;
+        if(position > galleryList.size() - 1) {
+            addButton.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.VISIBLE);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            File file = new File(galleryList.get(position).getImageLocation());
+            Uri imageUri = Uri.fromFile(file);
+            Glide.with(activity.getApplicationContext())
+                    .load(imageUri)
+                    .fitCenter()
+                    .error(R.drawable.ic_error)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .listener(new RequestListener<Uri, GlideDrawable>() {
 
-                    @Override
-                    public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        Log.e(TAG, "Error loading image: " + e.getMessage());
-                        return false;
-                    }
+                        @Override
+                        public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            Log.e(TAG, "Error loading image: " + e.getMessage());
+                            return false;
+                        }
 
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            return false;
+                        }
 
-                })
-                .into(viewHolder.img);
+                    })
+                    .into(viewHolder.img);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return galleryList.size();
+        return galleryList.size() + 1;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private ImageView img;
+        private ImageButton addButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -86,6 +95,9 @@ public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListView
             img = view.findViewById(R.id.img);
             img.setOnClickListener(this);
             img.setOnLongClickListener(this);
+
+            addButton = view.findViewById(R.id.add_photo);
+            addButton.setOnClickListener(new AddPictureClickListener());
         }
 
         @Override
@@ -128,6 +140,14 @@ public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListView
                 return true;
             }
             return false;
+        }
+    }
+
+    private class AddPictureClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            PictureListViewAdapter.this.activity.dispatchTakePictureIntent();
         }
     }
 

@@ -13,6 +13,7 @@
 
     <string name="empty_list_message">Não há itens.</string>
     <string name="dialog_delete_item_message">Deseja realmente excluir este item?</string>
-    <string name="overwrite_message">Já existe este código de barras na base de dados. Deseja sobrescrever?</string>
+    <string name="overwrite_message">Já existe este código de barras na base de dados.</string>
     <string name="ok">Ok</string>
+    <string name="save_button">Salvar</string>
 </resources>

@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class ScannedItemActivity extends AppCompatActivity {
 
     private PictureListViewAdapter adapter;
     private ArrayList<PictureSource> pictureSources;
+    private boolean duplicated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scanned_item);
 
         Intent intent = getIntent();
-        this.barcodeValue  = intent.getStringExtra(ScannerFragment.BARCODE_VALUE);
+        this.barcodeValue = intent.getStringExtra(ScannerFragment.BARCODE_VALUE);
 
         ViewModelFactory viewModelFactory = new ViewModelFactory(new BarcodeRepository(this));
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(BarcodeViewModel.class);
@@ -58,6 +60,7 @@ public class ScannedItemActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.overwrite_message)
                     .setNeutralButton(R.string.ok, (dialog, id) -> {
+                        this.duplicated = true;
                         this.onBackPressed();
                     }).show();
         }
@@ -73,31 +76,30 @@ public class ScannedItemActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.imagegallery);
         recyclerView.setHasFixedSize(true);
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
         this.pictureSources = prepareData();
         this.adapter = new PictureListViewAdapter(this, pictureSources);
         recyclerView.setAdapter(adapter);
 
-        FloatingActionButton fab = findViewById(R.id.take_photo_fab);
-        fab.setOnClickListener(view -> ScannedItemActivity.this.dispatchTakePictureIntent());
+        Button saveButton = findViewById(R.id.save_button);
+        saveButton.setOnClickListener(view -> ScannedItemActivity.this.saveItem());
     }
 
+    private void saveItem() {
+        Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
+                Toast.LENGTH_SHORT).show();
+        viewModel.insert(this.barcodeValue);
+        super.onBackPressed();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id) {
-//            case R.id.action_done:
-//                Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
-//                        Toast.LENGTH_SHORT).show();
-//                viewModel.insert(this.barcodeValue);
-//                super.onBackPressed();
-//                return true;
-            case android.R.id.home:
-                this.onBackPressed();
-                return true;
+        if (id == android.R.id.home) {
+            this.onBackPressed();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -109,7 +111,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStackImmediate();
         } else {
-            if (!this.pictureSources.isEmpty()) {
+            if (!duplicated && !this.pictureSources.isEmpty()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.dialog_exit_message)
                         .setPositiveButton(R.string.ok, (dialog, id) -> {
@@ -149,7 +151,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         return images;
     }
 
-    private void dispatchTakePictureIntent() {
+    public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
