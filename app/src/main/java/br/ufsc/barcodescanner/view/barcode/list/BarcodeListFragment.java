@@ -12,12 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.Barcode;
-import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
+import br.ufsc.barcodescanner.service.repository.SqliteBarcodeRepository;
 import br.ufsc.barcodescanner.utils.ViewModelFactory;
 import br.ufsc.barcodescanner.view.FragmentLifecycle;
 import br.ufsc.barcodescanner.view.OnItemLongClickListener;
@@ -39,7 +40,7 @@ public class BarcodeListFragment extends Fragment implements FragmentLifecycle, 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewModelFactory viewModelFactory = new ViewModelFactory(new BarcodeRepository(this.getActivity()));
+        ViewModelFactory viewModelFactory = new ViewModelFactory(new SqliteBarcodeRepository(this.getActivity()));
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(BarcodeViewModel.class);
     }
 
@@ -90,6 +91,8 @@ public class BarcodeListFragment extends Fragment implements FragmentLifecycle, 
 
     //TODO: sync
     private void syncList() {
+        Toast.makeText(this.getActivity().getApplicationContext(), "Sincronização iniciada!",
+                Toast.LENGTH_SHORT).show();
         this.viewModel.startSync();
     }
 

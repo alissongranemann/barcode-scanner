@@ -34,8 +34,8 @@ public class ItemListViewAdapter extends RecyclerView.Adapter<ItemListViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Barcode barcode = barcodes.get(i);
-        viewHolder.barcodeValue.setText(barcode.barcodeValue);
-        viewHolder.imgCount.setText(TimestampConverter.dateToTimestamp(barcode.createDate));
+        viewHolder.barcodeValue.setText(barcode.value);
+        viewHolder.imgCount.setText(TimestampConverter.dateToTimestamp(barcode.createdAt));
         viewHolder.bind(barcode, onItemLongClickListener);
     }
 

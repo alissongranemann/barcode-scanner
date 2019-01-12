@@ -3,18 +3,18 @@ package br.ufsc.barcodescanner.service.database;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
-public class DatabaseHelper {
+public class SqliteDatabase {
 
-    private static AppDatabase INSTANCE;
+    private static AppSqliteDatabase INSTANCE;
 
-    private DatabaseHelper() {
+    private SqliteDatabase() {
 
     }
 
-    public static AppDatabase getInstance(Context context) {
+    public static AppSqliteDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                    AppDatabase.class, AppDatabase.DATABASE_NAME)
+                    AppSqliteDatabase.class, AppSqliteDatabase.DATABASE_NAME)
                     .allowMainThreadQueries() //TODO: remove
                     .build();
         }

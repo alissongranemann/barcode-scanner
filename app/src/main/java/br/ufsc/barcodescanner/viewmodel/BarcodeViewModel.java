@@ -9,21 +9,24 @@ import java.util.List;
 
 import br.ufsc.barcodescanner.service.model.Barcode;
 import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
+import br.ufsc.barcodescanner.service.repository.FirebaseBarcodeRepository;
 
 public class BarcodeViewModel extends ViewModel {
 
 
     private static final int PAGE_LENGTH = 10;
+    private FirebaseBarcodeRepository firebaseRepository;
     private MutableLiveData<List<Barcode>> barcodes;
 
     private BarcodeRepository repository;
 
     public BarcodeViewModel(BarcodeRepository repository) {
         this.repository = repository;
+        this.firebaseRepository = new FirebaseBarcodeRepository();
     }
 
     public MutableLiveData<List<Barcode>> getBarcodes() {
-        if(barcodes == null) {
+        if (barcodes == null) {
             barcodes = new MutableLiveData<>();
             reload();
         }
@@ -31,14 +34,14 @@ public class BarcodeViewModel extends ViewModel {
     }
 
     public void reload() {
-        if(barcodes != null) {
-            List<Barcode> barcodes = repository.loadBarcodes(new Date(), PAGE_LENGTH);
+        if (barcodes != null) {
+            List<Barcode> barcodes = repository.loadPage(new Date(), PAGE_LENGTH);
             this.barcodes.setValue(barcodes);
         }
     }
 
     public void delete(Barcode barcode) {
-        this.delete(barcode.barcodeValue);
+        this.delete(barcode.value);
         reload();
     }
 
@@ -48,8 +51,7 @@ public class BarcodeViewModel extends ViewModel {
     }
 
     public boolean hasBarcode(String barcodeValue) {
-        Barcode barcode = repository.fetchBarcode(barcodeValue);
-        return barcode != null;
+        return repository.hasBarcode(barcodeValue);
     }
 
     public void delete(String barcodeValue) {
@@ -58,13 +60,22 @@ public class BarcodeViewModel extends ViewModel {
     }
 
     public void startSync() {
+        Date lastDate = new Date();
+        List<Barcode> barcodes;
+        do {
+            barcodes = repository.loadPage(lastDate, PAGE_LENGTH);
+            for (Barcode barcode : barcodes) {
+                this.firebaseRepository.save(barcode.value, barcode.userUuid);
+                lastDate = barcode.createdAt;
+            }
+        } while (barcodes.size() == PAGE_LENGTH);
     }
 
     private class InsertTask extends AsyncTask<String, Void, Void> {
 
         @Override
         protected Void doInBackground(String... strings) {
-            repository.saveBarcode(strings[0], strings[1]);
+            repository.save(strings[0], strings[1]);
 
             return null;
         }

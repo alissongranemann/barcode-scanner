@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a89700e6b00acff0c74a0967983e4145",
+    "identityHash": "81c9b5918d8ea1534e5a8920dba95d74",
     "entities": [
       {
         "tableName": "barcode",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `barcode_value` TEXT, `created_date` TEXT, `user_uuid` TEXT, `synced` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `value` TEXT, `created_at` TEXT, `user_uuid` TEXT, `synced` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -16,13 +16,13 @@
           },
           {
             "fieldPath": "barcodeValue",
-            "columnName": "barcode_value",
+            "columnName": "value",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "createDate",
-            "columnName": "created_date",
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -50,9 +50,9 @@
             "name": "barcode_index",
             "unique": false,
             "columnNames": [
-              "barcode_value"
+              "value"
             ],
-            "createSql": "CREATE  INDEX `barcode_index` ON `${TABLE_NAME}` (`barcode_value`)"
+            "createSql": "CREATE  INDEX `barcode_index` ON `${TABLE_NAME}` (`value`)"
           }
         ],
         "foreignKeys": []
@@ -60,7 +60,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"a89700e6b00acff0c74a0967983e4145\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"81c9b5918d8ea1534e5a8920dba95d74\")"
     ]
   }
 }

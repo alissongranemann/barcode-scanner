@@ -13,19 +13,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
-import br.ufsc.barcodescanner.view.MainActivity;
 
 public class PictureDetailFragment extends Fragment {
 
-    private static final String TAG = "PictureDetailFragment";
     public static final String EXTRA_SPACE_PHOTO = "PictureDetailFragment.SPACE_PHOTO";
-
+    private static final String TAG = "PictureDetailFragment";
     private PictureSource source;
 
     @SuppressLint("RestrictedApi")

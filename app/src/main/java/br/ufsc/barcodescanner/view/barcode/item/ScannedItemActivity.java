@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
-import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
+import br.ufsc.barcodescanner.service.repository.SqliteBarcodeRepository;
 import br.ufsc.barcodescanner.utils.UUIDManager;
 import br.ufsc.barcodescanner.utils.ViewModelFactory;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
@@ -54,7 +53,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.barcodeValue = intent.getStringExtra(ScannerFragment.BARCODE_VALUE);
 
-        ViewModelFactory viewModelFactory = new ViewModelFactory(new BarcodeRepository(this));
+        ViewModelFactory viewModelFactory = new ViewModelFactory(new SqliteBarcodeRepository(this));
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(BarcodeViewModel.class);
 
         if (viewModel.hasBarcode(barcodeValue)) {

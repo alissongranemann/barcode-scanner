@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public class UUIDManager {
 
-    private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    private static String uniqueID = null;
 
     public synchronized static String id(Context context) {
         if (uniqueID == null) {

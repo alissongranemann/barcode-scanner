@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,7 +49,7 @@ public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListView
     public void onBindViewHolder(PictureListViewAdapter.ViewHolder viewHolder, int position) {
         ImageView imageView = viewHolder.img;
         ImageView addButton = viewHolder.addButton;
-        if(position > galleryList.size() - 1) {
+        if (position > galleryList.size() - 1) {
             addButton.setVisibility(View.VISIBLE);
         } else {
             imageView.setVisibility(View.VISIBLE);

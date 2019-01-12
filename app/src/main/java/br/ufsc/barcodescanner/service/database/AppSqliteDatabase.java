@@ -7,7 +7,7 @@ import br.ufsc.barcodescanner.service.database.dao.BarcodeDao;
 import br.ufsc.barcodescanner.service.model.Barcode;
 
 @Database(entities = {Barcode.class}, version = 1)
-public abstract class AppDatabase extends RoomDatabase {
+public abstract class AppSqliteDatabase extends RoomDatabase {
 
     public static String DATABASE_NAME = "barcode_db";
 

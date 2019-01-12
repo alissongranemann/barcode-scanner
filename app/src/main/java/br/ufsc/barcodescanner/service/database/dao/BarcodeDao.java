@@ -19,13 +19,13 @@ public interface BarcodeDao {
     @Delete
     void delete(Barcode barcode);
 
-    @Query("DELETE FROM barcode WHERE barcode_value = :barcodeValue")
+    @Query("DELETE FROM barcode WHERE value = :barcodeValue")
     void delete(String barcodeValue);
 
-    @Query("SELECT * FROM barcode WHERE created_date > date(:lastDate) ORDER BY created_date DESC LIMIT :pageLength")
+    @Query("SELECT * FROM barcode WHERE created_at > date(:lastDate) ORDER BY created_at DESC LIMIT :pageLength")
     List<Barcode> loadPage(String lastDate, int pageLength);
 
-    @Query("SELECT * FROM barcode WHERE barcode_value = :barcodeValue")
+    @Query("SELECT * FROM barcode WHERE value = :barcodeValue")
     Barcode fetch(String barcodeValue);
 
 }

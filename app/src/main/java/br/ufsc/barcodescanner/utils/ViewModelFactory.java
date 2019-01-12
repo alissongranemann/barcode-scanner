@@ -3,15 +3,15 @@ package br.ufsc.barcodescanner.utils;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
-import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
+import br.ufsc.barcodescanner.service.repository.SqliteBarcodeRepository;
 import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private BarcodeRepository repository;
+    private SqliteBarcodeRepository repository;
     private BarcodeViewModel viewModel;
 
-    public ViewModelFactory(BarcodeRepository dataSource) {
+    public ViewModelFactory(SqliteBarcodeRepository dataSource) {
         this.repository = dataSource;
     }
 
