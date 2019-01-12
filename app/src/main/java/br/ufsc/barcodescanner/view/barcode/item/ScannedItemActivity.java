@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
 import br.ufsc.barcodescanner.service.repository.BarcodeRepository;
+import br.ufsc.barcodescanner.utils.UUIDManager;
 import br.ufsc.barcodescanner.utils.ViewModelFactory;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
 import br.ufsc.barcodescanner.view.barcode.scanner.ScannerFragment;
@@ -89,7 +90,7 @@ public class ScannedItemActivity extends AppCompatActivity {
     private void saveItem() {
         Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
                 Toast.LENGTH_SHORT).show();
-        viewModel.insert(this.barcodeValue);
+        viewModel.insert(this.barcodeValue, UUIDManager.id(this));
         super.onBackPressed();
     }
 
@@ -134,6 +135,7 @@ public class ScannedItemActivity extends AppCompatActivity {
             for (int i = 0; i < children.length; i++) {
                 new File(dir, children[i]).delete();
             }
+            dir.delete();
         }
         pictureSources.clear();
     }

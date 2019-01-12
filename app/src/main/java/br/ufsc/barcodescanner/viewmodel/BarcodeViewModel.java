@@ -20,34 +20,31 @@ public class BarcodeViewModel extends ViewModel {
 
     public BarcodeViewModel(BarcodeRepository repository) {
         this.repository = repository;
-        init();
-    }
-
-    private void init() {
-        if (barcodes != null) {
-            return;
-        }
-        barcodes = new MutableLiveData<>();
-        reload();
     }
 
     public MutableLiveData<List<Barcode>> getBarcodes() {
+        if(barcodes == null) {
+            barcodes = new MutableLiveData<>();
+            reload();
+        }
         return barcodes;
     }
 
     public void reload() {
-        List<Barcode> barcodes = repository.loadBarcodes(new Date(), PAGE_LENGTH);
-        this.barcodes.setValue(barcodes);
+        if(barcodes != null) {
+            List<Barcode> barcodes = repository.loadBarcodes(new Date(), PAGE_LENGTH);
+            this.barcodes.setValue(barcodes);
+        }
     }
 
     public void delete(Barcode barcode) {
-        this.repository.delete(barcode);
+        this.delete(barcode.barcodeValue);
         reload();
     }
 
-    public void insert(String barcodeValue) {
+    public void insert(String barcodeValue, String uuid) {
         AsyncTask<String, Void, Void> insertTask = new InsertTask();
-        insertTask.execute(barcodeValue);
+        insertTask.execute(barcodeValue, uuid);
     }
 
     public boolean hasBarcode(String barcodeValue) {
@@ -67,7 +64,7 @@ public class BarcodeViewModel extends ViewModel {
 
         @Override
         protected Void doInBackground(String... strings) {
-            repository.saveBarcode(strings[0]);
+            repository.saveBarcode(strings[0], strings[1]);
 
             return null;
         }

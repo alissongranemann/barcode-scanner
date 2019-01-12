@@ -23,15 +23,13 @@ public class BarcodeRepository {
         return database.itemDao().loadPage(now, pageLength);
     }
 
-    public void saveBarcode(String barcodeValue) {
+    public void saveBarcode(String barcodeValue, String uuid) {
         Barcode barcode = new Barcode();
         barcode.barcodeValue = barcodeValue;
         barcode.createDate = new Date();
+        barcode.userUuid = uuid;
+        barcode.synced = false;
         database.itemDao().insert(barcode);
-    }
-
-    public void delete(Barcode barcode) {
-        this.database.itemDao().delete(barcode);
     }
 
     public Barcode fetchBarcode(String barcodeValue) {

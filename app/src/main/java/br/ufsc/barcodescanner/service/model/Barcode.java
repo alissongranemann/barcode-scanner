@@ -26,4 +26,10 @@ public class Barcode {
     @TypeConverters({TimestampConverter.class})
     public Date createDate;
 
+    @ColumnInfo(name = "user_uuid")
+    public String userUuid;
+
+    @ColumnInfo(name = "synced")
+    public boolean synced;
+
 }
