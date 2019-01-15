@@ -4,10 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
@@ -62,11 +58,11 @@ public class ViewPort extends ViewGroup {
 //        canvas.drawPath(path, stroke);
 //        canvas.drawRoundRect(rect, (float) viewportCornerRadius, (float) viewportCornerRadius, eraser);
 
-        int x0 = canvas.getWidth()/2;
-        int y0 = canvas.getHeight()/2;
-        int dx = canvas.getHeight()/3;
-        int dy = canvas.getHeight()/3;
+        int x0 = canvas.getWidth() / 2;
+        int y0 = canvas.getHeight() / 2;
+        int dx = canvas.getHeight() / 3;
+        int dy = canvas.getHeight() / 3;
         //draw guide box
-        canvas.drawRect(x0-dx, y0-dy, x0+dx, y0+dy, stroke);
+        canvas.drawRect(x0 - dx, y0 - dy, x0 + dx, y0 + dy, stroke);
     }
 }

@@ -81,9 +81,8 @@ public class FirebaseBarcodeRepository {
     public Barcode save(String barcodeValue, String uuid, OnCompleteListener<Void> handler) {
         Barcode barcode = new Barcode();
         barcode.value = barcodeValue;
-        barcode.c = new Date();
-        barcode.u = uuid;
-        barcode.synced = false;
+        barcode.dt = new Date();
+        barcode.id = uuid;
 
         reference.child(barcode.value).setValue(barcode).addOnCompleteListener(handler);
 
