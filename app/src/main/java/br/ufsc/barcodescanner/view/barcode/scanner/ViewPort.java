@@ -4,6 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
@@ -39,30 +43,16 @@ public class ViewPort extends ViewGroup {
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
 
-//        int viewportMargin = 32;
-//        int viewportCornerRadius = 8;
-//        Paint eraser = new Paint();
-//        eraser.setAntiAlias(true);
-//        eraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-//        float width = (float) getWidth() - viewportMargin;
-//        float height =  width * (float) 0.7;
-//        RectF rect = new RectF((float)viewportMargin, (float)viewportMargin, width, height);
-//        RectF frame = new RectF((float)viewportMargin-2, (float)viewportMargin-2, width+4, height+4);
-//        Path path = new Path();
-        Paint stroke = new Paint();
-        stroke.setAntiAlias(true);
-        stroke.setStrokeWidth(4);
-        stroke.setColor(Color.WHITE);
-        stroke.setStyle(Paint.Style.STROKE);
-//        path.addRoundRect(frame, (float) viewportCornerRadius, (float) viewportCornerRadius, Path.Direction.CW);
-//        canvas.drawPath(path, stroke);
-//        canvas.drawRoundRect(rect, (float) viewportCornerRadius, (float) viewportCornerRadius, eraser);
-
-        int x0 = canvas.getWidth() / 2;
+        int x0 = 0;
+        int dx = canvas.getWidth();
         int y0 = canvas.getHeight() / 2;
-        int dx = canvas.getHeight() / 3;
-        int dy = canvas.getHeight() / 3;
-        //draw guide box
-        canvas.drawRect(x0 - dx, y0 - dy, x0 + dx, y0 + dy, stroke);
+        int dy = canvas.getHeight() / 5;
+
+        Paint eraser = new Paint();
+        eraser.setAntiAlias(true);
+        eraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+
+        RectF rect = new RectF(x0, y0 - dy, dx, y0 + dy);
+        canvas.drawRect(rect, eraser);
     }
 }
