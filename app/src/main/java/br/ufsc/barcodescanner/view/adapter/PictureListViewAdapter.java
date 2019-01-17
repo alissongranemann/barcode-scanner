@@ -24,17 +24,17 @@ import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
-import br.ufsc.barcodescanner.view.barcode.item.ScannedItemActivity;
-import br.ufsc.barcodescanner.view.barcode.picture.PictureDetailFragment;
+import br.ufsc.barcodescanner.view.ui.ScannedBarcodeActivity;
+import br.ufsc.barcodescanner.view.ui.PictureDetailFragment;
 
 public class PictureListViewAdapter extends RecyclerView.Adapter<PictureListViewAdapter.ViewHolder> {
 
     private static final String TAG = "PictureListViewAdapter";
 
     private ArrayList<PictureSource> galleryList;
-    private ScannedItemActivity activity;
+    private ScannedBarcodeActivity activity;
 
-    public PictureListViewAdapter(ScannedItemActivity activity, ArrayList<PictureSource> galleryList) {
+    public PictureListViewAdapter(ScannedBarcodeActivity activity, ArrayList<PictureSource> galleryList) {
         this.galleryList = galleryList;
         this.activity = activity;
     }

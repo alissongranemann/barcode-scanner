@@ -35,14 +35,13 @@ public class FirebaseBarcodeRepository {
     public FirebaseBarcodeRepository(ChildEventListener childListener) {
         database = FirebaseDatabase.getInstance();
         this.reference = database.getReference(BARCODE_PATH);
-        this.reference.keepSynced(false);
         if (childListener != null) {
             reference.addChildEventListener(childListener);
         }
     }
 
     public void loadPage(Date lastDate, LoadPageHandler handler) {
-        Query query = reference.orderByChild("c").limitToFirst(PAGE_LENGTH).startAt(lastDate.getTime());
+        Query query = reference.orderByChild("dt").limitToFirst(PAGE_LENGTH).startAt(lastDate.getTime());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

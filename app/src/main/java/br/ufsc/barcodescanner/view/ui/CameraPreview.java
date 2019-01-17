@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.view.barcode.scanner;
+package br.ufsc.barcodescanner.view.ui;
 
 import android.Manifest;
 import android.app.Activity;

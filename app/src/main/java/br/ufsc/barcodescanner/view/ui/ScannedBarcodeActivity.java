@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.view.barcode.item;
+package br.ufsc.barcodescanner.view.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -26,15 +26,13 @@ import java.util.ArrayList;
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
 import br.ufsc.barcodescanner.utils.UUIDManager;
-import br.ufsc.barcodescanner.utils.ViewModelFactory;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
-import br.ufsc.barcodescanner.view.barcode.scanner.ScannerFragment;
 import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
-public class ScannedItemActivity extends AppCompatActivity {
+public class ScannedBarcodeActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final String TAG = "ScannedItemActivity";
+    private static final String TAG = "ScannedBarcodeActivity";
 
     private String barcodeValue;
     private String currentPhotoPath;
@@ -47,13 +45,12 @@ public class ScannedItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scanned_item);
+        setContentView(R.layout.activity_scanned_barcode);
 
         Intent intent = getIntent();
-        this.barcodeValue = intent.getStringExtra(ScannerFragment.BARCODE_VALUE);
+        this.barcodeValue = intent.getStringExtra(BarcodeScannerActivity.BARCODE_VALUE);
 
-        ViewModelFactory viewModelFactory = new ViewModelFactory();
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BarcodeViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
 
         viewModel.hasBarcode(barcodeValue, hasChild -> {
             if (hasChild) {
@@ -84,7 +81,7 @@ public class ScannedItemActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         Button saveButton = findViewById(R.id.save_button);
-        saveButton.setOnClickListener(view -> ScannedItemActivity.this.saveItem());
+        saveButton.setOnClickListener(view -> ScannedBarcodeActivity.this.saveItem());
     }
 
     private void saveItem() {
@@ -117,7 +114,7 @@ public class ScannedItemActivity extends AppCompatActivity {
                 builder.setMessage(R.string.dialog_exit_message)
                         .setPositiveButton(R.string.ok, (dialog, id) -> {
                             clearPictureDir();
-                            ScannedItemActivity.super.onBackPressed();
+                            ScannedBarcodeActivity.super.onBackPressed();
                         })
                         .setNegativeButton(R.string.cancel, (dialog, id) -> {
                             // Do nothing

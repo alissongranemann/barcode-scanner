@@ -5,17 +5,17 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/barcodeValue"
+        android:id="@+id/barcode_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/imgCount"
+        android:id="@+id/barcode_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/barcodeValue"
+        android:layout_below="@id/barcode_value"
         android:layout_marginTop="5dp"
         android:textSize="18sp" />
 

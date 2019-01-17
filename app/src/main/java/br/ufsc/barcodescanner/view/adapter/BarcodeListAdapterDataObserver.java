@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.view.barcode.list;
+package br.ufsc.barcodescanner.view.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

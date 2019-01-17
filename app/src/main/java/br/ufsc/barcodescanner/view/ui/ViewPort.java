@@ -1,10 +1,8 @@
-package br.ufsc.barcodescanner.view.barcode.scanner;
+package br.ufsc.barcodescanner.view.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
@@ -12,6 +10,8 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 
 public class ViewPort extends ViewGroup {
+
+    private static final String TAG = "ViewPort";
 
     public ViewPort(Context context) {
         super(context);
@@ -38,6 +38,7 @@ public class ViewPort extends ViewGroup {
     public boolean shouldDelayChildPressedState() {
         return false;
     }
+
 
     @Override
     protected void dispatchDraw(Canvas canvas) {

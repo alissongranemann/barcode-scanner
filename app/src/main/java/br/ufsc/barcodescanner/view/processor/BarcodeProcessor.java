@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.view.barcode.scanner;
+package br.ufsc.barcodescanner.view.processor;
 
 import android.util.Log;
 import android.util.SparseArray;

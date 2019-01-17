@@ -1,4 +1,4 @@
-package br.ufsc.barcodescanner.view.barcode.picture;
+package br.ufsc.barcodescanner.view.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -39,7 +39,7 @@ public class PictureDetailFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_photo_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_photo_detail, container, false);
         Toolbar toolbar = view.findViewById(R.id.image_detail_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
