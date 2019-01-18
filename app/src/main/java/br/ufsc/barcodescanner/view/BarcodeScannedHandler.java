@@ -2,5 +2,5 @@ package br.ufsc.barcodescanner.view;
 
 public interface BarcodeScannedHandler {
 
-    void handle(String barcode);
+    void onObjectDetected(String barcode);
 }

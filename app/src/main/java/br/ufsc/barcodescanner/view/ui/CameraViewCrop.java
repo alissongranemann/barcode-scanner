@@ -7,21 +7,22 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
 
-public class ViewPort extends ViewGroup {
+public class CameraViewCrop extends ViewGroup {
 
-    private static final String TAG = "ViewPort";
+    private static final String TAG = "CameraCrop";
 
-    public ViewPort(Context context) {
+    public CameraViewCrop(Context context) {
         super(context);
     }
 
-    public ViewPort(Context context, AttributeSet attrs) {
+    public CameraViewCrop(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ViewPort(Context context, AttributeSet attrs, int defStyle) {
+    public CameraViewCrop(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -44,16 +45,25 @@ public class ViewPort extends ViewGroup {
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
 
-        int x0 = 0;
-        int dx = canvas.getWidth();
-        int y0 = canvas.getHeight() / 2;
-        int dy = canvas.getHeight() / 5;
+        int height = canvas.getHeight();
+        int width = canvas.getWidth();
+
+        Log.d(TAG, String.format("Canvas: Width: %d; Height: %d",
+                canvas.getWidth(), canvas.getHeight()));
+
+        int left = 0;
+        int top = height / 4;
+        int right = width;
+        int bottom = height - (height / 4);
+
+        Log.d(TAG, String.format("Left: %d, Top: %d, Right: %d, Bottom: %d",
+                left, top, right, bottom));
 
         Paint eraser = new Paint();
         eraser.setAntiAlias(true);
         eraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 
-        RectF rect = new RectF(x0, y0 - dy, dx, y0 + dy);
+        RectF rect = new RectF(left, top, right, bottom);
         canvas.drawRect(rect, eraser);
     }
 }

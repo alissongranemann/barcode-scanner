@@ -9,18 +9,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.Barcode;
 import br.ufsc.barcodescanner.view.OnItemLongClickListener;
-import br.ufsc.barcodescanner.view.adapter.ItemListViewAdapter;
 import br.ufsc.barcodescanner.view.adapter.BarcodeListAdapterDataObserver;
+import br.ufsc.barcodescanner.view.adapter.ItemListViewAdapter;
 import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
 public class BarcodeListActivity extends AppCompatActivity implements OnItemLongClickListener {
@@ -47,9 +44,6 @@ public class BarcodeListActivity extends AppCompatActivity implements OnItemLong
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        TextView toolbarTitle = toolbar.findViewById(R.id.barcode_list_toolbar_title);
-        toolbarTitle.setText("Total: ");
     }
 
     private void createList() {

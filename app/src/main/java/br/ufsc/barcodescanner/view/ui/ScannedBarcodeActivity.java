@@ -40,7 +40,6 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
     private PictureListViewAdapter adapter;
     private ArrayList<PictureSource> pictureSources;
-    private boolean duplicated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +50,6 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         this.barcodeValue = intent.getStringExtra(BarcodeScannerActivity.BARCODE_VALUE);
 
         viewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
-
-        viewModel.hasBarcode(barcodeValue, hasChild -> {
-            if (hasChild) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.overwrite_message)
-                        .setNeutralButton(R.string.ok, (dialog, id) -> {
-                            this.duplicated = true;
-                            this.onBackPressed();
-                        }).show();
-            }
-        });
 
         Toolbar myToolbar = findViewById(R.id.scanned_item_toolbar);
         setSupportActionBar(myToolbar);
@@ -109,7 +97,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStackImmediate();
         } else {
-            if (!duplicated && !this.pictureSources.isEmpty()) {
+            if (!this.pictureSources.isEmpty()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.dialog_exit_message)
                         .setPositiveButton(R.string.ok, (dialog, id) -> {

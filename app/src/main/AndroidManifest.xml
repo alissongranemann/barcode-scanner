@@ -19,16 +19,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BarcodeScanner">
 
-        <activity android:name=".view.ui.BarcodeScannerActivity">
+        <activity android:name=".view.ui.BarcodeScannerActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.ui.ScannedBarcodeActivity"></activity>
-        <activity android:name=".view.ui.BarcodeListActivity"></activity>
+        <activity
+            android:name=".view.ui.ScannedBarcodeActivity" />
+        <activity android:name=".view.ui.BarcodeListActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

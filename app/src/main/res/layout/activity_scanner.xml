@@ -18,11 +18,11 @@
 
     </br.ufsc.barcodescanner.view.ui.camera.CameraSourcePreview>
 
-    <br.ufsc.barcodescanner.view.ui.ViewPort
+    <br.ufsc.barcodescanner.view.ui.CameraViewCrop
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#B3000000">
-    </br.ufsc.barcodescanner.view.ui.ViewPort>
+    </br.ufsc.barcodescanner.view.ui.CameraViewCrop>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/barcode_list_fab"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="12dp"
+        android:layout_margin="15dp"
         android:src="@drawable/ic_list" />
 
 </RelativeLayout>
