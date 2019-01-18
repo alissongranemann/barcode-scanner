@@ -1,77 +1,184 @@
 package br.ufsc.barcodescanner.view.ui;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.widget.FrameLayout;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
-import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+
+import java.io.IOException;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.view.BarcodeScannedHandler;
 import br.ufsc.barcodescanner.view.processor.BarcodeProcessor;
+import br.ufsc.barcodescanner.view.ui.camera.CameraSource;
+import br.ufsc.barcodescanner.view.ui.camera.CameraSourcePreview;
 
 public class BarcodeScannerActivity extends AppCompatActivity implements BarcodeScannedHandler {
 
     public static final String BARCODE_VALUE = "br.ufsc.barcodescanner.BARCODE_VALUE";
+    private static final int RC_HANDLE_CAMERA_PERM = 2;
+    private static final int RC_HANDLE_GMS = 9001;
     private static final String TAG = "BarcodeScannerActivity";
 
-    private CameraPreview cameraPreview;
-    private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
-    private FrameLayout frameLayout;
+    private CameraSourcePreview mPreview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
 
-        this.frameLayout = findViewById(R.id.surfaceView);
+        mPreview = findViewById(R.id.preview);
 
         FloatingActionButton fab = findViewById(R.id.barcode_list_fab);
         fab.setOnClickListener(view -> this.openBarcodeListActivity());
+
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (rc == PackageManager.PERMISSION_GRANTED)
+            createCameraSource();
+        else
+            requestCameraPermission();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initSource();
+        startCameraSource();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        releaseCamera();
+        if (mPreview != null) {
+            mPreview.stop();
+        }
     }
 
-    private void initSource() {
-        barcodeDetector = new BarcodeDetector.Builder(this)
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPreview != null) {
+            mPreview.release();
+        }
+    }
+
+    private void requestCameraPermission() {
+        Log.w(TAG, "Camera permission is not granted. Requesting permission");
+
+        final String[] permissions = new String[]{Manifest.permission.CAMERA};
+
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.CAMERA)) {
+            ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
+            return;
+        }
+
+        ActivityCompat.requestPermissions(this, permissions,
+                RC_HANDLE_CAMERA_PERM);
+    }
+
+    @SuppressLint("InlinedApi")
+    private void createCameraSource() {
+        Context context = getApplicationContext();
+
+        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
                 .build();
         barcodeDetector.setProcessor(new BarcodeProcessor(this));
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
+
+        if (!barcodeDetector.isOperational()) {
+            Log.w(TAG, "Detector dependencies are not yet available.");
+
+            IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
+            boolean hasLowStorage = registerReceiver(null, lowstorageFilter) != null;
+
+            if (hasLowStorage) {
+                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
+                Log.w(TAG, getString(R.string.low_storage_error));
+            }
+        }
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
         cameraSource = new CameraSource.Builder(this, barcodeDetector)
-                .setAutoFocusEnabled(true)
-                .setRequestedPreviewSize(1024, 768)
+                .setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
+                .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setRequestedPreviewSize(metrics.heightPixels, metrics.widthPixels)
+                .setRequestedFps(30.0f)
                 .build();
-
-        cameraPreview = new CameraPreview(this, cameraSource);
-        frameLayout.addView(cameraPreview);
     }
 
-    private void releaseCamera() {
-        if (cameraSource != null) {
-            cameraSource.release();
-            cameraSource = null;
+    private void startCameraSource() throws SecurityException {
+        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
+                getApplicationContext());
+        if (code != ConnectionResult.SUCCESS) {
+            Dialog dlg =
+                    GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
+            dlg.show();
         }
+
+        if (cameraSource != null) {
+            try {
+                mPreview.start(cameraSource);
+            } catch (IOException e) {
+                Log.e(TAG, "Unable to start camera source.", e);
+                cameraSource.release();
+                cameraSource = null;
+            }
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode != RC_HANDLE_CAMERA_PERM) {
+            Log.d(TAG, "Got unexpected permission result: " + requestCode);
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            return;
+        }
+
+        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Camera permission granted - initialize the camera source");
+            createCameraSource();
+            return;
+        }
+
+        Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+
+        DialogInterface.OnClickListener listener = (dialog, id) -> finish();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Multitracker sample")
+                .setMessage(R.string.no_camera_permission)
+                .setPositiveButton(R.string.ok, listener)
+                .show();
     }
 
     private void openBarcodeListActivity() {

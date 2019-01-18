@@ -16,4 +16,6 @@
     <string name="overwrite_message">Já existe este código de barras na base de dados.</string>
     <string name="ok">Ok</string>
     <string name="save_button">Salvar</string>
+    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission. The application will now exit.</string>
 </resources>
