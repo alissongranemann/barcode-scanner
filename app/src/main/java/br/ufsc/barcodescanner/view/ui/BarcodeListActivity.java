@@ -16,7 +16,7 @@ import java.util.List;
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.Barcode;
 import br.ufsc.barcodescanner.view.OnItemLongClickListener;
-import br.ufsc.barcodescanner.view.adapter.BarcodeListAdapterDataObserver;
+import br.ufsc.barcodescanner.view.adapter.EmptyListAdapterDataObserver;
 import br.ufsc.barcodescanner.view.adapter.ItemListViewAdapter;
 import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
 
@@ -48,13 +48,13 @@ public class BarcodeListActivity extends AppCompatActivity implements OnItemLong
 
     private void createList() {
         this.adapter = new ItemListViewAdapter(this);
-        TextView emptyView = findViewById(R.id.empty_message);
+        TextView emptyView = findViewById(R.id.barcode_list_empty_message);
         RecyclerView recyclerView = findViewById(R.id.barcodeList);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        adapter.registerAdapterDataObserver(new BarcodeListAdapterDataObserver(emptyView, adapter));
+        adapter.registerAdapterDataObserver(new EmptyListAdapterDataObserver(emptyView, adapter));
     }
 
     private void refreshList(List<Barcode> barcodes) {

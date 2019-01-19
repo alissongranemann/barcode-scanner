@@ -3,7 +3,7 @@
     <string name="action_favorite">Concluído</string>
     <string name="toolbar_title">Item</string>
     <string name="item_saved">Item salvo!</string>
-    <string name="dialog_exit_message">Você perderá os dados. Deseja realmente voltar?</string>
+    <string name="dialog_exit_message">Você perderá as fotos. Deseja realmente voltar?</string>
     <string name="dialog_exit_title">Cancelar</string>
     <string name="positive">Sim</string>
     <string name="cancel">Não</string>
@@ -18,4 +18,6 @@
     <string name="low_storage_error">As dependências não puderam ser baixadas por falta de memória</string>
     <string name="no_camera_permission">Esta aplicação necessita de permissão da câmera para rodar. A aplicação irá fechar.</string>
     <string name="barcode_list_title">Lista</string>
+    <string name="file_provider">br.ufsc.barcodescanner.fileprovider</string>
+    <string name="add_photo">Adicionar foto</string>
 </resources>

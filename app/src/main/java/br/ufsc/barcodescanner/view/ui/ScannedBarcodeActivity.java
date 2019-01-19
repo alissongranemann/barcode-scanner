@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +15,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,13 +23,13 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import br.ufsc.barcodescanner.R;
-import br.ufsc.barcodescanner.service.model.PictureSource;
 import br.ufsc.barcodescanner.utils.UUIDManager;
+import br.ufsc.barcodescanner.view.adapter.EmptyListAdapterDataObserver;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
 import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
+import br.ufsc.barcodescanner.viewmodel.PictureViewModel;
 
 public class ScannedBarcodeActivity extends AppCompatActivity {
 
@@ -35,11 +37,9 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
     private static final String TAG = "ScannedBarcodeActivity";
 
     private String barcodeValue;
-    private String currentPhotoPath;
-    private BarcodeViewModel viewModel;
 
-    private PictureListViewAdapter adapter;
-    private ArrayList<PictureSource> pictureSources;
+    private BarcodeViewModel barcodeViewModel;
+    private PictureViewModel pictureViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +49,6 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.barcodeValue = intent.getStringExtra(BarcodeScannerActivity.BARCODE_VALUE);
 
-        viewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
-
         Toolbar myToolbar = findViewById(R.id.scanned_item_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -59,36 +57,57 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         TextView mTitle = myToolbar.findViewById(R.id.scanned_item_toolbar_title);
         mTitle.setText(barcodeValue);
 
+        TextView emptyView = findViewById(R.id.picture_list_empty_message);
         RecyclerView recyclerView = findViewById(R.id.imagegallery);
         recyclerView.setHasFixedSize(true);
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
+        RecyclerView.LayoutManager layoutManager =
+                new GridLayoutManager(getApplicationContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
-        this.pictureSources = prepareData();
-        this.adapter = new PictureListViewAdapter(this, pictureSources);
+        PictureListViewAdapter adapter = new PictureListViewAdapter(this);
+        adapter.registerAdapterDataObserver(new EmptyListAdapterDataObserver(emptyView, adapter));
         recyclerView.setAdapter(adapter);
 
-        Button saveButton = findViewById(R.id.save_button);
-        saveButton.setOnClickListener(view -> ScannedBarcodeActivity.this.saveItem());
+        FloatingActionButton fab = findViewById(R.id.add_photo_fab);
+        fab.setOnClickListener(view -> this.dispatchTakePictureIntent());
+
+        barcodeViewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
+        pictureViewModel = ViewModelProviders.of(this).get(PictureViewModel.class);
+        pictureViewModel.getPictures().observe(this, pictureSources -> {
+            adapter.setPictures(pictureSources);
+        });
+        pictureViewModel.setPicturesDirPath(
+                getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath(), barcodeValue);
+
     }
 
-    private void saveItem() {
-        Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
-                Toast.LENGTH_SHORT).show();
-        viewModel.insert(this.barcodeValue, UUIDManager.id(this));
-        super.onBackPressed();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.scanned_item_menu, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == android.R.id.home) {
-            this.onBackPressed();
-            return true;
+        switch (id) {
+            case R.id.action_done:
+                this.saveItem();
+                return true;
+            case android.R.id.home:
+                this.onBackPressed();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void saveItem() {
+        Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
+                Toast.LENGTH_SHORT).show();
+        barcodeViewModel.insert(this.barcodeValue, UUIDManager.id(this));
+        super.onBackPressed();
     }
 
     @Override
@@ -97,11 +116,11 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStackImmediate();
         } else {
-            if (!this.pictureSources.isEmpty()) {
+            if (!this.pictureViewModel.hasPictures()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.dialog_exit_message)
                         .setPositiveButton(R.string.ok, (dialog, id) -> {
-                            clearPictureDir();
+                            this.pictureViewModel.clearPictureDir();
                             ScannedBarcodeActivity.super.onBackPressed();
                         })
                         .setNegativeButton(R.string.cancel, (dialog, id) -> {
@@ -113,43 +132,14 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         }
     }
 
-    private void clearPictureDir() {
-        File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                new File(dir, children[i]).delete();
-            }
-            dir.delete();
-        }
-        pictureSources.clear();
-    }
-
-    private ArrayList<PictureSource> prepareData() {
-        ArrayList<PictureSource> images = new ArrayList<>();
-
-        File f = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
-        File file[] = f.listFiles();
-        for (int i = 0; i < file.length; i++) {
-            PictureSource pictureSource = new PictureSource(file[i].getAbsolutePath());
-            images.add(pictureSource);
-        }
-
-        return images;
-    }
-
     public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
             try {
-                photoFile = createImageFile();
-                // Continue only if the File was successfully created
+                File photoFile = this.pictureViewModel.createImageFile(barcodeValue);
                 if (photoFile != null) {
                     Uri photoURI = FileProvider.getUriForFile(this,
-                            "br.ufsc.barcodescanner.fileprovider",
+                            getString(R.string.file_provider),
                             photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -162,31 +152,11 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         }
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String count = String.valueOf(pictureSources.size() + 1);
-        String imageFileName = barcodeValue + "_" + count;
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        this.currentPhotoPath = image.getAbsolutePath();
-
-        return image;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Log.d(TAG, "Reloading recycler view.");
-            int index = pictureSources.size();
-            PictureSource pictureSource = new PictureSource(currentPhotoPath);
-            pictureSources.add(pictureSource);
-
-            adapter.notifyItemInserted(index);
+            this.pictureViewModel.createPicture();
         }
     }
 

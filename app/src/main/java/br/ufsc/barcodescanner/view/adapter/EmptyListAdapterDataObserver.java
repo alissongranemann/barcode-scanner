@@ -3,12 +3,12 @@ package br.ufsc.barcodescanner.view.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class BarcodeListAdapterDataObserver extends RecyclerView.AdapterDataObserver {
+public class EmptyListAdapterDataObserver extends RecyclerView.AdapterDataObserver {
 
     private View emptyView;
     private RecyclerView.Adapter adapter;
 
-    public BarcodeListAdapterDataObserver(View emptyView, RecyclerView.Adapter adapter) {
+    public EmptyListAdapterDataObserver(View emptyView, RecyclerView.Adapter adapter) {
         this.emptyView = emptyView;
         this.adapter = adapter;
     }

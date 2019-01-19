@@ -196,7 +196,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
 
     @Override
     public void onObjectDetected(String barcode) {
-        if(!detected) {
+        if (!detected) {
             Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
             v.vibrate(500);
             detected = true;
