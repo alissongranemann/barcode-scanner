@@ -40,8 +40,8 @@ public class FirebaseBarcodeRepository {
         }
     }
 
-    public void loadPage(Date lastDate, LoadPageHandler handler) {
-        Query query = reference.orderByChild("dt").limitToFirst(PAGE_LENGTH).startAt(lastDate.getTime());
+    public void loadPage(LoadPageHandler handler) {
+        Query query = reference.limitToLast(PAGE_LENGTH);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

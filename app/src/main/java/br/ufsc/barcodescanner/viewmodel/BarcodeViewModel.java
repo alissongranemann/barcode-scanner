@@ -35,7 +35,7 @@ public class BarcodeViewModel extends ViewModel {
 
     public void reload() {
         if (barcodes != null) {
-            repository.loadPage(new Date(), page -> barcodes.setValue(page));
+            repository.loadPage(page -> barcodes.setValue(page));
         }
     }
 
