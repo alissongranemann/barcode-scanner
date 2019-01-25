@@ -10,12 +10,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import br.ufsc.barcodescanner.service.model.PictureSource;
+import br.ufsc.barcodescanner.utils.FileUtils;
 
 public class PictureViewModel extends ViewModel {
 
+    private static final String TAG = "PictureViewModel";
     private MutableLiveData<List<PictureSource>> pictures;
     private String currentPhotoPath;
-    private String picturesDirPath;
+    private File picturesDir;
 
     public MutableLiveData<List<PictureSource>> getPictures() {
         if (pictures == null) {
@@ -25,8 +27,8 @@ public class PictureViewModel extends ViewModel {
         return pictures;
     }
 
-    public void setPicturesDirPath(String externalDirPath, String barcodePath) {
-        this.picturesDirPath = externalDirPath + File.separator + barcodePath;
+    public void setPicturesDirPath(File picturesDir) {
+        this.picturesDir = picturesDir;
     }
 
     public boolean hasPictures() {
@@ -34,14 +36,7 @@ public class PictureViewModel extends ViewModel {
     }
 
     public void clearPictureDir() {
-        File dir = new File(picturesDirPath);
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                new File(dir, children[i]).delete();
-            }
-            dir.delete();
-        }
+        FileUtils.clearDir(picturesDir);
         this.pictures.setValue(new ArrayList<>());
     }
 
@@ -52,15 +47,11 @@ public class PictureViewModel extends ViewModel {
         this.pictures.setValue(value);
     }
 
-    public File createImageFile(String barcodeValue) throws IOException {
-        String count = Integer.toString(this.pictures.getValue().size() + 1);
-        String imageFileName = barcodeValue + "_" + count;
-        File storageDir = new File(picturesDirPath);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+    public File createImageFile(String barcode) throws IOException {
+        final int index = this.pictures.getValue().size() + 1;
+        final String filename = String.format("%s_%d.jpg", barcode, index);
+        File image = new File(picturesDir, filename);
+        image.createNewFile();
 
         this.currentPhotoPath = image.getAbsolutePath();
 

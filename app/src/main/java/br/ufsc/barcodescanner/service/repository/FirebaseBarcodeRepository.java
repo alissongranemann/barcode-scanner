@@ -3,6 +3,7 @@ package br.ufsc.barcodescanner.service.repository;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -12,6 +13,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class FirebaseBarcodeRepository {
 
     static {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        FirebaseDatabase.getInstance();
+        FirebaseDatabase.getInstance().setPersistenceCacheSizeBytes(20000000);
     }
 
     private final DatabaseReference reference;
@@ -41,7 +43,7 @@ public class FirebaseBarcodeRepository {
     }
 
     public void loadPage(LoadPageHandler handler) {
-        Query query = reference.limitToLast(PAGE_LENGTH);
+        Query query = reference.orderByChild("dt").limitToLast(PAGE_LENGTH);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -51,6 +53,7 @@ public class FirebaseBarcodeRepository {
                     barcode.value = snapshot.getKey();
                     barcodes.add(barcode);
                 }
+                Collections.reverse(barcodes);
                 handler.handle(barcodes);
             }
 
@@ -77,19 +80,19 @@ public class FirebaseBarcodeRepository {
         reference.addListenerForSingleValueEvent(listener);
     }
 
-    public Barcode save(String barcodeValue, String uuid, OnCompleteListener<Void> handler) {
+    public Barcode save(String barcodeValue, String uuid, OnCompleteListener<Void> completeListener, OnSuccessListener<Void> sucessListener) {
         Barcode barcode = new Barcode();
         barcode.value = barcodeValue;
-        barcode.dt = new Date();
+        barcode.dt = new Date().getTime();
         barcode.id = uuid;
 
-        reference.child(barcode.value).setValue(barcode).addOnCompleteListener(handler);
+        reference.child(barcode.value).setValue(barcode).addOnCompleteListener(completeListener).addOnSuccessListener(sucessListener);
 
         return barcode;
     }
 
-    public void delete(String barcodeValue, OnCompleteListener<Void> handler) {
-        reference.child(barcodeValue).removeValue().addOnCompleteListener(handler);
+    public void delete(String barcodeValue, OnSuccessListener<Void> handler) {
+        reference.child(barcodeValue).removeValue().addOnSuccessListener(handler);
     }
 
     public interface LoadPageHandler {

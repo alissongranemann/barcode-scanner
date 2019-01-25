@@ -26,6 +26,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 
@@ -47,12 +49,16 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
     private CameraSource cameraSource;
     private CameraSourcePreview mPreview;
     private BarcodeViewModel viewModel;
+    private FirebaseAuth mAuth;
     private boolean detected;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
+
+        FirebaseApp.initializeApp(this);
+        mAuth = FirebaseAuth.getInstance();
 
         mPreview = findViewById(R.id.preview);
 
@@ -67,6 +73,18 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
         }
 
         viewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.signInAnonymously().addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "signInAnonymously:success");
+            } else {
+                Log.w(TAG, "signInAnonymously:failure", task.getException());
+            }
+        });
     }
 
     @Override
@@ -113,8 +131,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
                 .setBarcodeFormats(Barcode.EAN_8 | Barcode.EAN_13 | Barcode.UPC_A
                         | Barcode.UPC_E | Barcode.ITF | Barcode.CODE_39 | Barcode.CODE_128)
                 .build();
-        BoxDetector boxDetector =
-                new BoxDetector(barcodeDetector, metrics.heightPixels, metrics.widthPixels);
+        BoxDetector boxDetector = new BoxDetector(barcodeDetector);
 
         boxDetector.setProcessor(new BarcodeProcessor(this));
 

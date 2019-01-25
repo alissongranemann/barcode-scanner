@@ -17,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,14 +70,16 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.add_photo_fab);
         fab.setOnClickListener(view -> this.dispatchTakePictureIntent());
 
+        File picturesPath = getExternalFilesDir(
+                Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
+
         barcodeViewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
+        barcodeViewModel.setPicturesDirPath(picturesPath);
         pictureViewModel = ViewModelProviders.of(this).get(PictureViewModel.class);
+        pictureViewModel.setPicturesDirPath(picturesPath);
         pictureViewModel.getPictures().observe(this, pictureSources -> {
             adapter.setPictures(pictureSources);
         });
-        pictureViewModel.setPicturesDirPath(
-                getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath(), barcodeValue);
-
     }
 
     @Override

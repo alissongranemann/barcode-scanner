@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.Detector;
@@ -18,13 +17,9 @@ public class BoxDetector extends Detector {
     private static String TAG = "CameraCrop";
 
     private Detector mDelegate;
-    private int mBoxWidth, mBoxHeight;
-    private boolean logged = false;
 
-    public BoxDetector(Detector delegate, int boxWidth, int boxHeight) {
+    public BoxDetector(Detector delegate) {
         mDelegate = delegate;
-        mBoxWidth = boxWidth;
-        mBoxHeight = boxHeight;
     }
 
     public SparseArray detect(Frame frame) {
@@ -45,15 +40,6 @@ public class BoxDetector extends Detector {
         byte[] jpegArray = byteArrayOutputStream.toByteArray();
         Bitmap bitmap = BitmapFactory.decodeByteArray(jpegArray,
                 0, jpegArray.length);
-
-        if (!logged) {
-            Log.d(TAG, String.format("Frame: Width: %d; Height: %d",
-                    width, height));
-
-            Log.d(TAG, String.format("Left: %d, Top: %d, Right: %d, Bottom: %d",
-                    left, top, right, bottom));
-            logged = true;
-        }
 
         Frame croppedFrame =
                 new Frame.Builder()

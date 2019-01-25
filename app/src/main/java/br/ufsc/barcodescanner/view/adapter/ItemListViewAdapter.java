@@ -36,7 +36,7 @@ public class ItemListViewAdapter extends RecyclerView.Adapter<ItemListViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Barcode barcode = barcodes.get(i);
         viewHolder.barcodeValue.setText(barcode.value);
-        viewHolder.date.setText(TimestampConverter.dateToString(barcode.dt));
+        viewHolder.date.setText(TimestampConverter.timestampToString(barcode.dt));
         viewHolder.bind(barcode, onItemLongClickListener);
     }
 
@@ -53,12 +53,14 @@ public class ItemListViewAdapter extends RecyclerView.Adapter<ItemListViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView barcodeValue;
+        public TextView date;
         private View view;
 
         public ViewHolder(View view) {
             super(view);
             this.view = view;
             this.barcodeValue = view.findViewById(R.id.barcode_value);
+            this.date = view.findViewById(R.id.barcode_date);
         }
 
         public void bind(Barcode barcode, OnItemLongClickListener onItemLongClickListener) {
