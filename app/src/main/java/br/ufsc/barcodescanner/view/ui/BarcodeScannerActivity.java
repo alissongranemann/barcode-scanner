@@ -37,7 +37,7 @@ import br.ufsc.barcodescanner.view.processor.BarcodeProcessor;
 import br.ufsc.barcodescanner.view.processor.BoxDetector;
 import br.ufsc.barcodescanner.view.ui.camera.CameraSource;
 import br.ufsc.barcodescanner.view.ui.camera.CameraSourcePreview;
-import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
+import br.ufsc.barcodescanner.viewmodel.BarcodeItemViewModel;
 
 public class BarcodeScannerActivity extends AppCompatActivity implements BarcodeScannedHandler {
 
@@ -48,7 +48,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
 
     private CameraSource cameraSource;
     private CameraSourcePreview mPreview;
-    private BarcodeViewModel viewModel;
+    private BarcodeItemViewModel viewModel;
     private FirebaseAuth mAuth;
     private boolean detected;
 
@@ -72,7 +72,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
             requestCameraPermission();
         }
 
-        viewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(BarcodeItemViewModel.class);
     }
 
     @Override

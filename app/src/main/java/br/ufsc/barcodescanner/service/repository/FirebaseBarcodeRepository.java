@@ -2,9 +2,7 @@ package br.ufsc.barcodescanner.service.repository;
 
 import android.support.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import br.ufsc.barcodescanner.service.model.Barcode;
+import br.ufsc.barcodescanner.viewmodel.BarcodeChildEventListener;
 
 
 public class FirebaseBarcodeRepository {
@@ -34,17 +33,18 @@ public class FirebaseBarcodeRepository {
 
     private FirebaseDatabase database;
 
-    public FirebaseBarcodeRepository(ChildEventListener childListener) {
+    public FirebaseBarcodeRepository() {
         database = FirebaseDatabase.getInstance();
         this.reference = database.getReference(BARCODE_PATH);
-        if (childListener != null) {
-            reference.addChildEventListener(childListener);
-        }
+    }
+
+    public void setChildEventListener(BarcodeChildEventListener listener) {
+        reference.addChildEventListener(listener);
     }
 
     public void loadPage(LoadPageHandler handler) {
         Query query = reference.orderByChild("dt").limitToLast(PAGE_LENGTH);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Barcode> barcodes = new ArrayList<>();
@@ -61,7 +61,8 @@ public class FirebaseBarcodeRepository {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        query.addListenerForSingleValueEvent(listener);
     }
 
     public void hasBarcode(String barcodeValue, HasBarcodeHandler handler) {
@@ -80,13 +81,13 @@ public class FirebaseBarcodeRepository {
         reference.addListenerForSingleValueEvent(listener);
     }
 
-    public Barcode save(String barcodeValue, String uuid, OnCompleteListener<Void> completeListener, OnSuccessListener<Void> sucessListener) {
+    public Barcode save(String barcodeValue, String uuid, OnSuccessListener<Void> sucessListener) {
         Barcode barcode = new Barcode();
         barcode.value = barcodeValue;
         barcode.dt = new Date().getTime();
         barcode.id = uuid;
 
-        reference.child(barcode.value).setValue(barcode).addOnCompleteListener(completeListener).addOnSuccessListener(sucessListener);
+        reference.child(barcode.value).setValue(barcode).addOnSuccessListener(sucessListener);
 
         return barcode;
     }

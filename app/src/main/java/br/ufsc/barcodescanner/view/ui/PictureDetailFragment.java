@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.PictureSource;
@@ -75,6 +76,7 @@ public class PictureDetailFragment extends Fragment {
         Glide.with(this)
                 .load(source.getImageLocation())
                 .asBitmap()
+                .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                 .error(R.drawable.ic_error)
                 .placeholder(R.drawable.ic_placeholder)
                 .into(mImageView);

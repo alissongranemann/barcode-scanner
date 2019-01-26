@@ -2,6 +2,7 @@ package br.ufsc.barcodescanner.view.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,22 +19,24 @@ import br.ufsc.barcodescanner.service.model.Barcode;
 import br.ufsc.barcodescanner.view.OnItemLongClickListener;
 import br.ufsc.barcodescanner.view.adapter.EmptyListAdapterDataObserver;
 import br.ufsc.barcodescanner.view.adapter.ItemListViewAdapter;
-import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
+import br.ufsc.barcodescanner.viewmodel.BarcodeListViewModel;
 
 public class BarcodeListActivity extends AppCompatActivity implements OnItemLongClickListener {
 
     private static final String TAG = "CameraPreview";
 
     private ItemListViewAdapter adapter;
-    private BarcodeViewModel viewModel;
+    private BarcodeListViewModel viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_list);
 
-        viewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
-        viewModel.getBarcodes().observe(this, barcodes -> refreshList(barcodes));
+        viewModel = ViewModelProviders.of(this).get(BarcodeListViewModel.class);
+        viewModel.getBarcodeList().observe(this, barcodeList -> refreshList(barcodeList));
+        viewModel.setExternalStoragePath(getExternalFilesDir(
+                Environment.DIRECTORY_PICTURES).getAbsolutePath());
 
         createToolbar();
         createList();

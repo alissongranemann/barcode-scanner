@@ -27,7 +27,7 @@ import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.utils.UUIDManager;
 import br.ufsc.barcodescanner.view.adapter.EmptyListAdapterDataObserver;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
-import br.ufsc.barcodescanner.viewmodel.BarcodeViewModel;
+import br.ufsc.barcodescanner.viewmodel.BarcodeItemViewModel;
 import br.ufsc.barcodescanner.viewmodel.PictureViewModel;
 
 public class ScannedBarcodeActivity extends AppCompatActivity {
@@ -37,7 +37,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
     private String barcodeValue;
 
-    private BarcodeViewModel barcodeViewModel;
+    private BarcodeItemViewModel barcodeItemViewModel;
     private PictureViewModel pictureViewModel;
 
     @Override
@@ -70,16 +70,14 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.add_photo_fab);
         fab.setOnClickListener(view -> this.dispatchTakePictureIntent());
 
-        File picturesPath = getExternalFilesDir(
-                Environment.DIRECTORY_PICTURES + File.separator + barcodeValue);
+        String picturesPath = getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
 
-        barcodeViewModel = ViewModelProviders.of(this).get(BarcodeViewModel.class);
-        barcodeViewModel.setPicturesDirPath(picturesPath);
+        barcodeItemViewModel = ViewModelProviders.of(this).get(BarcodeItemViewModel.class);
+        barcodeItemViewModel.setExternalStoragePath(picturesPath);
         pictureViewModel = ViewModelProviders.of(this).get(PictureViewModel.class);
-        pictureViewModel.setPicturesDirPath(picturesPath);
-        pictureViewModel.getPictures().observe(this, pictureSources -> {
-            adapter.setPictures(pictureSources);
-        });
+        pictureViewModel.setExternalStoragePath(picturesPath);
+        pictureViewModel.getPictures().observe(this,
+                pictureSources -> adapter.setPictures(pictureSources));
     }
 
     @Override
@@ -107,7 +105,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
     private void saveItem() {
         Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
                 Toast.LENGTH_SHORT).show();
-        barcodeViewModel.insert(this.barcodeValue, UUIDManager.id(this));
+        barcodeItemViewModel.insert(this.barcodeValue, UUIDManager.id(this));
         super.onBackPressed();
     }
 
@@ -121,7 +119,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.dialog_exit_message)
                         .setPositiveButton(R.string.ok, (dialog, id) -> {
-                            this.pictureViewModel.clearPictureDir();
+                            this.pictureViewModel.clearPictureDir(this.barcodeValue);
                             ScannedBarcodeActivity.super.onBackPressed();
                         })
                         .setNegativeButton(R.string.cancel, (dialog, id) -> {

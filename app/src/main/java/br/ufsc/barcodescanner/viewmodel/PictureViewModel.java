@@ -17,7 +17,7 @@ public class PictureViewModel extends ViewModel {
     private static final String TAG = "PictureViewModel";
     private MutableLiveData<List<PictureSource>> pictures;
     private String currentPhotoPath;
-    private File picturesDir;
+    private String externalStoragePath;
 
     public MutableLiveData<List<PictureSource>> getPictures() {
         if (pictures == null) {
@@ -27,16 +27,16 @@ public class PictureViewModel extends ViewModel {
         return pictures;
     }
 
-    public void setPicturesDirPath(File picturesDir) {
-        this.picturesDir = picturesDir;
+    public void setExternalStoragePath(String externalStoragePath) {
+        this.externalStoragePath = externalStoragePath;
     }
 
     public boolean hasPictures() {
         return this.pictures.getValue().isEmpty();
     }
 
-    public void clearPictureDir() {
-        FileUtils.clearDir(picturesDir);
+    public void clearPictureDir(String barcodeValue) {
+        FileUtils.clearDir(new File(externalStoragePath, barcodeValue));
         this.pictures.setValue(new ArrayList<>());
     }
 
@@ -50,7 +50,11 @@ public class PictureViewModel extends ViewModel {
     public File createImageFile(String barcode) throws IOException {
         final int index = this.pictures.getValue().size() + 1;
         final String filename = String.format("%s_%d.jpg", barcode, index);
-        File image = new File(picturesDir, filename);
+        File barcodeDir = new File(externalStoragePath, barcode);
+        if(!barcodeDir.exists()) {
+            barcodeDir.mkdir();
+        }
+        File image = new File(barcodeDir, filename);
         image.createNewFile();
 
         this.currentPhotoPath = image.getAbsolutePath();
