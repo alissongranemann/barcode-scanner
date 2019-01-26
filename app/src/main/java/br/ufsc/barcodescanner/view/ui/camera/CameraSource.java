@@ -261,7 +261,6 @@ public class CameraSource {
             }
 
             mCamera = createCamera();
-
             // SurfaceTexture was introduced in Honeycomb (11), so if we are running and
             // old version of Android. fall back to use SurfaceView.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

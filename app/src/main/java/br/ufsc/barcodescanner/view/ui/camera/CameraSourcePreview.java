@@ -43,10 +43,15 @@ public class CameraSourcePreview extends ViewGroup {
         mContext = context;
         mStartRequested = false;
         mSurfaceAvailable = false;
-
         mSurfaceView = new SurfaceView(context);
         mSurfaceView.getHolder().addCallback(new SurfaceCallback());
         addView(mSurfaceView);
+
+        setOnClickListener(v -> {
+            if (mCameraSource != null) {
+                mCameraSource.autoFocus(null);
+            }
+        });
     }
 
     @RequiresPermission(Manifest.permission.CAMERA)

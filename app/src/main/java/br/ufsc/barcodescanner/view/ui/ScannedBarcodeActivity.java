@@ -1,8 +1,10 @@
 package br.ufsc.barcodescanner.view.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -141,6 +143,10 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
                             getString(R.string.file_provider),
                             photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+                        takePictureIntent.setClipData(ClipData.newRawUri("", photoURI));
+                        takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION|Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    }
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             } catch (IOException e) {

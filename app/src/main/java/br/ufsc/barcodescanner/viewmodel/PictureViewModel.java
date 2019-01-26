@@ -51,7 +51,7 @@ public class PictureViewModel extends ViewModel {
         final int index = this.pictures.getValue().size() + 1;
         final String filename = String.format("%s_%d.jpg", barcode, index);
         File barcodeDir = new File(externalStoragePath, barcode);
-        if(!barcodeDir.exists()) {
+        if (!barcodeDir.exists()) {
             barcodeDir.mkdir();
         }
         File image = new File(barcodeDir, filename);

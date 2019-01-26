@@ -148,7 +148,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
         }
 
         cameraSource = new CameraSource.Builder(this, boxDetector)
-                .setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
+//                .setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedPreviewSize(metrics.heightPixels, metrics.widthPixels)
                 .setRequestedFps(30.0f)
