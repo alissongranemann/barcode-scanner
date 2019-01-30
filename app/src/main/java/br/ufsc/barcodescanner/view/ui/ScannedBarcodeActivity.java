@@ -145,7 +145,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
                         takePictureIntent.setClipData(ClipData.newRawUri("", photoURI));
-                        takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION|Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     }
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }

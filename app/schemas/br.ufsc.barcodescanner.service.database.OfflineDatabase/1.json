@@ -1,0 +1,113 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "cdfffbcc0067287d25230dfd91c9649c",
+    "entities": [
+      {
+        "tableName": "food_group",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT, `description_filter` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "descriptionFilter",
+            "columnName": "description_filter",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "food_group_ix_description",
+            "unique": false,
+            "columnNames": [
+              "description_filter"
+            ],
+            "createSql": "CREATE  INDEX `food_group_ix_description` ON `${TABLE_NAME}` (`description_filter`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "food_subgroup",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT, `description_filter` TEXT, `group_id` INTEGER NOT NULL, FOREIGN KEY(`group_id`) REFERENCES `food_group`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "descriptionFilter",
+            "columnName": "description_filter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "groupId",
+            "columnName": "group_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "food_subgroup_ix_description",
+            "unique": false,
+            "columnNames": [
+              "description_filter"
+            ],
+            "createSql": "CREATE  INDEX `food_subgroup_ix_description` ON `${TABLE_NAME}` (`description_filter`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "food_group",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "group_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"cdfffbcc0067287d25230dfd91c9649c\")"
+    ]
+  }
+}
