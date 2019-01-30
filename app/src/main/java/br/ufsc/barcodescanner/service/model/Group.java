@@ -10,20 +10,13 @@ import android.arch.persistence.room.PrimaryKey;
 })
 public class Group {
 
-    @PrimaryKey(autoGenerate = true)
-    public long id;
+    @PrimaryKey
+    public int id;
+
     @ColumnInfo(name = "description")
     public String description;
+
     @ColumnInfo(name = "description_filter")
     public String descriptionFilter;
-
-    public Group(String description, String descriptionFilter) {
-        this.description = description;
-        this.descriptionFilter = descriptionFilter;
-    }
-
-    public static Group[] populateData() {
-        return new Group[]{};
-    }
 
 }

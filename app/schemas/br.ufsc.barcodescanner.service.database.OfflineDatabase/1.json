@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cdfffbcc0067287d25230dfd91c9649c",
+    "identityHash": "86717086ce9243fbefdd0b203fc703a6",
     "entities": [
       {
         "tableName": "food_group",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT, `description_filter` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `description` TEXT, `description_filter` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -31,7 +31,7 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -47,7 +47,7 @@
       },
       {
         "tableName": "food_subgroup",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT, `description_filter` TEXT, `group_id` INTEGER NOT NULL, FOREIGN KEY(`group_id`) REFERENCES `food_group`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `description` TEXT, `description_filter` TEXT, `group_id` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`group_id`) REFERENCES `food_group`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -78,16 +78,17 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
-            "name": "food_subgroup_ix_description",
+            "name": "food_subgroup_ix_description_group",
             "unique": false,
             "columnNames": [
-              "description_filter"
+              "description_filter",
+              "group_id"
             ],
-            "createSql": "CREATE  INDEX `food_subgroup_ix_description` ON `${TABLE_NAME}` (`description_filter`)"
+            "createSql": "CREATE  INDEX `food_subgroup_ix_description_group` ON `${TABLE_NAME}` (`description_filter`, `group_id`)"
           }
         ],
         "foreignKeys": [
@@ -107,7 +108,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"cdfffbcc0067287d25230dfd91c9649c\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"86717086ce9243fbefdd0b203fc703a6\")"
     ]
   }
 }

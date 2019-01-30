@@ -9,21 +9,19 @@ import android.arch.persistence.room.PrimaryKey;
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "food_subgroup",
-        indices = {
-                @Index(name = "food_subgroup_ix_description",
-                        value = {"description_filter"})
-        },
         foreignKeys = {
-                @ForeignKey(entity = Group.class,
-                        parentColumns = "id",
-                        childColumns = "group_id",
+                @ForeignKey(entity = Group.class, parentColumns = "id", childColumns = "group_id",
                         onDelete = CASCADE)
+        },
+        indices = {
+                @Index(name = "food_subgroup_ix_description_group",
+                        value = {"description_filter", "group_id"})
         }
 )
 public class Subgroup {
 
-    @PrimaryKey(autoGenerate = true)
-    public long id;
+    @PrimaryKey
+    public int id;
 
     @ColumnInfo(name = "description")
     public String description;
@@ -34,7 +32,4 @@ public class Subgroup {
     @ColumnInfo(name = "group_id")
     public int groupId;
 
-    public static Subgroup[] populateData() {
-        return new Subgroup[]{};
-    }
 }

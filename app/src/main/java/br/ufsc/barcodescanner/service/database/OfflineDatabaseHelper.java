@@ -5,15 +5,19 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
-import java.util.concurrent.Executors;
+import com.google.android.gms.common.util.IOUtils;
 
-import br.ufsc.barcodescanner.service.model.Group;
-import br.ufsc.barcodescanner.service.model.Subgroup;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class OfflineDatabaseHelper {
 
     private static OfflineDatabase INSTANCE;
+    private static String TAG = "OfflineDatabaseHelper";
 
     private OfflineDatabaseHelper() {
     }
@@ -26,10 +30,21 @@ public class OfflineDatabaseHelper {
                         @Override
                         public void onCreate(@NonNull SupportSQLiteDatabase db) {
                             super.onCreate(db);
-                            Executors.newSingleThreadScheduledExecutor().execute(() -> { //TODO: fix race condition
-                                getInstance(context).groupDao().insertAll(Group.populateData());
-                                getInstance(context).subgroupDao().insertAll(Subgroup.populateData());
-                            });
+                            InputStream is = null;
+                            try {
+                                is = context.getAssets().open("db_init.sql");
+                                String line;
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                                while ((line = reader.readLine()) != null) {
+                                    Log.i("SQL Script", line);
+                                    if (!line.isEmpty() && !line.trim().startsWith("--"))
+                                        db.execSQL(line);
+                                }
+                            } catch (IOException e) {
+                                Log.e(TAG, "Error loading init SQL", e);
+                            } finally {
+                                IOUtils.closeQuietly(is);
+                            }
                         }
                     })
                     //.allowMainThreadQueries()
@@ -38,6 +53,5 @@ public class OfflineDatabaseHelper {
 
         return INSTANCE;
     }
-
 
 }
