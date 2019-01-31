@@ -17,10 +17,15 @@ public class LocalDatabaseRepository {
     }
 
     public List<Group> loadGroups(String descriptionFilter) {
-        return database.groupDao().getGroups(descriptionFilter);
+        return database.groupDao().getGroups(getLikeableFilter(descriptionFilter));
     }
 
     public List<Group> loadSubgroups(String descriptionFilter, long groupId) {
-        return database.subgroupDao().getSubgroups(descriptionFilter, groupId);
+        return database.subgroupDao().getSubgroups(getLikeableFilter(descriptionFilter), groupId);
     }
+
+    private String getLikeableFilter(String filter) {
+        return String.format("%%%s%%", filter);
+    }
+
 }

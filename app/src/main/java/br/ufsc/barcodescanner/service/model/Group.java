@@ -8,7 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "food_group", indices = {
         @Index(name = "food_group_ix_description", value = {"description_filter"})
 })
-public class Group {
+public class Group implements GroupEntity {
 
     @PrimaryKey
     public int id;
@@ -19,4 +19,8 @@ public class Group {
     @ColumnInfo(name = "description_filter")
     public String descriptionFilter;
 
+    @Override
+    public String getDescription() {
+        return description;
+    }
 }

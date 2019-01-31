@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,14 +27,16 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.Group;
+import br.ufsc.barcodescanner.service.repository.LocalDatabaseRepository;
 import br.ufsc.barcodescanner.utils.UUIDManager;
 import br.ufsc.barcodescanner.view.adapter.EmptyListAdapterDataObserver;
 import br.ufsc.barcodescanner.view.adapter.GroupListAdapter;
+import br.ufsc.barcodescanner.view.adapter.GroupListFilter;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
+import br.ufsc.barcodescanner.view.adapter.SubgroupListFilter;
 import br.ufsc.barcodescanner.viewmodel.BarcodeItemViewModel;
 import br.ufsc.barcodescanner.viewmodel.PictureViewModel;
 
@@ -86,11 +89,37 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         pictureViewModel.getPictures().observe(this,
                 pictureSources -> adapter.setPictures(pictureSources));
 
-        AutoCompleteTextView autoCompleteGroup = findViewById(R.id.group);
-        List<Group> storeOffers = new ArrayList<>();
+        LocalDatabaseRepository localDatabaseRepository = new LocalDatabaseRepository(this);
+
+        AutoCompleteTextView autoCompleteSubgroup = findViewById(R.id.subgroupAutoComplete);
+        SubgroupListFilter subgroupListFilter = new SubgroupListFilter(localDatabaseRepository);
+        GroupListAdapter subgroupListAdapter = new GroupListAdapter(this,
+                android.R.layout.simple_dropdown_item_1line, new ArrayList<>(), subgroupListFilter);
+        subgroupListFilter.setAdapter(subgroupListAdapter);
+        autoCompleteSubgroup.setAdapter(subgroupListAdapter);
+        autoCompleteSubgroup.setOnItemClickListener((parent, view, position, id) -> {
+            String item = ((Group) parent.getItemAtPosition(position)).description;
+            autoCompleteSubgroup.setText(item);
+        });
+
+        AutoCompleteTextView autoCompleteGroup = findViewById(R.id.groupAutoComplete);
+        GroupListFilter groupFilter = new GroupListFilter(localDatabaseRepository);
         GroupListAdapter groupListAdapter = new GroupListAdapter(this,
-                R.layout.group_item, storeOffers);
+                android.R.layout.simple_dropdown_item_1line,
+                new ArrayList<>(), groupFilter);
+        groupFilter.setAdapter(groupListAdapter);
         autoCompleteGroup.setAdapter(groupListAdapter);
+        autoCompleteGroup.setOnItemClickListener((parent, view, position, id) -> {
+            Group group = (Group) parent.getItemAtPosition(position);
+            String item = group.description;
+            if(item != null && !item.isEmpty()) {
+                autoCompleteSubgroup.setVisibility(View.VISIBLE);
+                subgroupListFilter.setGroupId(group.id);
+            } else {
+                autoCompleteSubgroup.setVisibility(View.GONE);
+            }
+            autoCompleteGroup.setText(item);
+        });
     }
 
     @Override
