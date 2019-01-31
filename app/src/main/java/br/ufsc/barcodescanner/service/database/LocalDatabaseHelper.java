@@ -14,18 +14,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class OfflineDatabaseHelper {
+public class LocalDatabaseHelper {
 
-    private static OfflineDatabase INSTANCE;
-    private static String TAG = "OfflineDatabaseHelper";
+    private static LocalDatabase INSTANCE;
+    private static String TAG = "LocalDatabaseHelper";
 
-    private OfflineDatabaseHelper() {
+    private LocalDatabaseHelper() {
     }
 
-    public static OfflineDatabase getInstance(Context context) {
+    public static LocalDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                    OfflineDatabase.class, OfflineDatabase.DATABASE_NAME)
+                    LocalDatabase.class, LocalDatabase.DATABASE_NAME)
                     .addCallback(new RoomDatabase.Callback() {
                         @Override
                         public void onCreate(@NonNull SupportSQLiteDatabase db) {
@@ -47,6 +47,7 @@ public class OfflineDatabaseHelper {
                             }
                         }
                     })
+                    .fallbackToDestructiveMigration()
                     //.allowMainThreadQueries()
                     .build();
         }

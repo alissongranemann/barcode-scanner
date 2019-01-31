@@ -9,7 +9,7 @@ import br.ufsc.barcodescanner.service.model.Group;
 import br.ufsc.barcodescanner.service.model.Subgroup;
 
 @Database(entities = {Group.class, Subgroup.class}, version = 1)
-public abstract class OfflineDatabase extends RoomDatabase {
+public abstract class LocalDatabase extends RoomDatabase {
 
     public static String DATABASE_NAME = "barcode_db";
 

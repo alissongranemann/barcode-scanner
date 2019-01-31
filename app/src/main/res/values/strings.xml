@@ -20,4 +20,5 @@
     <string name="barcode_list_title">Lista</string>
     <string name="file_provider">br.ufsc.barcodescanner.fileprovider</string>
     <string name="add_photo">Adicionar foto</string>
+    <string name="group_text_label">Grupo</string>
 </resources>

@@ -19,15 +19,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.ufsc.barcodescanner.R;
+import br.ufsc.barcodescanner.service.model.Group;
 import br.ufsc.barcodescanner.utils.UUIDManager;
 import br.ufsc.barcodescanner.view.adapter.EmptyListAdapterDataObserver;
+import br.ufsc.barcodescanner.view.adapter.GroupListAdapter;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
 import br.ufsc.barcodescanner.viewmodel.BarcodeItemViewModel;
 import br.ufsc.barcodescanner.viewmodel.PictureViewModel;
@@ -80,6 +85,12 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         pictureViewModel.setExternalStoragePath(picturesPath);
         pictureViewModel.getPictures().observe(this,
                 pictureSources -> adapter.setPictures(pictureSources));
+
+        AutoCompleteTextView autoCompleteGroup = findViewById(R.id.group);
+        List<Group> storeOffers = new ArrayList<>();
+        GroupListAdapter groupListAdapter = new GroupListAdapter(this,
+                R.layout.group_item, storeOffers);
+        autoCompleteGroup.setAdapter(groupListAdapter);
     }
 
     @Override

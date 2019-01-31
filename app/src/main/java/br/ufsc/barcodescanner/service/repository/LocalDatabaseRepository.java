@@ -4,16 +4,16 @@ import android.content.Context;
 
 import java.util.List;
 
-import br.ufsc.barcodescanner.service.database.OfflineDatabase;
-import br.ufsc.barcodescanner.service.database.OfflineDatabaseHelper;
+import br.ufsc.barcodescanner.service.database.LocalDatabase;
+import br.ufsc.barcodescanner.service.database.LocalDatabaseHelper;
 import br.ufsc.barcodescanner.service.model.Group;
 
-public class GroupRepository {
+public class LocalDatabaseRepository {
 
-    private OfflineDatabase database;
+    private LocalDatabase database;
 
-    public GroupRepository(Context context) {
-        this.database = OfflineDatabaseHelper.getInstance(context);
+    public LocalDatabaseRepository(Context context) {
+        this.database = LocalDatabaseHelper.getInstance(context);
     }
 
     public List<Group> loadGroups(String descriptionFilter) {
