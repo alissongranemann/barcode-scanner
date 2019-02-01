@@ -30,31 +30,31 @@
         android:orientation="vertical"
         android:padding="5dp">
 
-        <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
-            android:id="@+id/groupSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:BoarderColor="@android:color/black"
-            app:DoneSearchTintColor="@color/colorPrimaryDark"
-            app:RevealEmptyText="@string/group_spinner_placeholder"
-            app:RevealViewBackgroundColor="@android:color/white"
-            app:SearchViewBackgroundColor="@android:color/secondary_text_dark"
-            app:ShowBorders="true"
-            app:SpinnerExpandHeight="200dp"
-            app:StartSearchTintColor="@android:color/white" />
+        <!--<gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner-->
+            <!--android:id="@+id/groupSpinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:BoarderColor="@android:color/black"-->
+            <!--app:DoneSearchTintColor="@color/colorPrimaryDark"-->
+            <!--app:RevealEmptyText="@string/group_spinner_placeholder"-->
+            <!--app:RevealViewBackgroundColor="@android:color/white"-->
+            <!--app:SearchViewBackgroundColor="@android:color/secondary_text_dark"-->
+            <!--app:ShowBorders="true"-->
+            <!--app:SpinnerExpandHeight="200dp"-->
+            <!--app:StartSearchTintColor="@android:color/white" />-->
 
-        <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
-            android:id="@+id/subgroupSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:BoarderColor="@android:color/black"
-            app:DoneSearchTintColor="@color/colorPrimaryDark"
-            app:RevealEmptyText="@string/subgroup_spinner_placeholder"
-            app:RevealViewBackgroundColor="@android:color/white"
-            app:SearchViewBackgroundColor="@android:color/secondary_text_dark"
-            app:ShowBorders="true"
-            app:SpinnerExpandHeight="200dp"
-            app:StartSearchTintColor="@android:color/white" />
+        <!--<gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner-->
+            <!--android:id="@+id/subgroupSpinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:BoarderColor="@android:color/black"-->
+            <!--app:DoneSearchTintColor="@color/colorPrimaryDark"-->
+            <!--app:RevealEmptyText="@string/subgroup_spinner_placeholder"-->
+            <!--app:RevealViewBackgroundColor="@android:color/white"-->
+            <!--app:SearchViewBackgroundColor="@android:color/secondary_text_dark"-->
+            <!--app:ShowBorders="true"-->
+            <!--app:SpinnerExpandHeight="200dp"-->
+            <!--app:StartSearchTintColor="@android:color/white" />-->
 
     </LinearLayout>
 
