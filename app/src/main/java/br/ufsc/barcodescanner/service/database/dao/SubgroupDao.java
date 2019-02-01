@@ -6,13 +6,13 @@ import android.arch.persistence.room.RoomWarnings;
 
 import java.util.List;
 
-import br.ufsc.barcodescanner.service.model.Group;
+import br.ufsc.barcodescanner.service.model.Subgroup;
 
 @Dao
 public interface SubgroupDao {
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT id, description FROM food_subgroup WHERE description_filter like :groupFilter and group_id=:groupId")
-    List<Group> getSubgroups(String groupFilter, long groupId);
+    @Query("SELECT * FROM food_subgroup WHERE description_filter like :groupFilter and group_id=:groupId")
+    List<Subgroup> getSubgroups(String groupFilter, long groupId);
 
 }

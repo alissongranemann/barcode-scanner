@@ -13,15 +13,15 @@ import java.util.List;
 
 import br.ufsc.barcodescanner.service.model.GroupEntity;
 
-public class GroupListAdapter<T extends GroupEntity> extends ArrayAdapter {
+public class SpinnerAdapter<T extends GroupEntity> extends ArrayAdapter {
 
-    private static final String TAG = "GroupListAdapter";
+    private static final String TAG = "SpinnerAdapter";
     private List<T> groupList;
     private int itemLayout;
 
-    private Filter listFilter;
+    private ListFilter listFilter;
 
-    public GroupListAdapter(Context context, int resource, List<T> groupList, Filter filter) {
+    public SpinnerAdapter(Context context, int resource, List<T> groupList, ListFilter filter) {
         super(context, resource, groupList);
         this.groupList = groupList;
         itemLayout = resource;
@@ -57,7 +57,12 @@ public class GroupListAdapter<T extends GroupEntity> extends ArrayAdapter {
         return listFilter;
     }
 
-    public void setGroupList(List<T> groupList) {
+    public void updateGroupList(List<T> groupList) {
         this.groupList = groupList;
+        if (this.groupList != null && this.groupList.size() > 0) {
+            notifyDataSetChanged();
+        } else {
+            notifyDataSetInvalidated();
+        }
     }
 }

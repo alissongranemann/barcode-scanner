@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +32,7 @@ import br.ufsc.barcodescanner.service.model.Group;
 import br.ufsc.barcodescanner.service.repository.LocalDatabaseRepository;
 import br.ufsc.barcodescanner.utils.UUIDManager;
 import br.ufsc.barcodescanner.view.adapter.EmptyListAdapterDataObserver;
-import br.ufsc.barcodescanner.view.adapter.GroupListAdapter;
+import br.ufsc.barcodescanner.view.adapter.SpinnerAdapter;
 import br.ufsc.barcodescanner.view.adapter.GroupListFilter;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
 import br.ufsc.barcodescanner.view.adapter.SubgroupListFilter;
@@ -91,18 +90,18 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         pictureViewModel.getPictures().observe(this,
                 pictureSources -> adapter.setPictures(pictureSources));
 
-        LocalDatabaseRepository localDatabaseRepository = new LocalDatabaseRepository(this);
+        LocalDatabaseRepository repository = new LocalDatabaseRepository(this);
 
         SearchableSpinner autoCompleteSubgroup = findViewById(R.id.subgroupSpinner);
-        SubgroupListFilter subgroupListFilter = new SubgroupListFilter(localDatabaseRepository);
-        GroupListAdapter subgroupListAdapter = new GroupListAdapter(this,
-                android.R.layout.simple_dropdown_item_1line, new ArrayList<>(), subgroupListFilter);
-        subgroupListFilter.setAdapter(subgroupListAdapter);
+        SubgroupListFilter subgroupFilter = new SubgroupListFilter(repository);
+        SpinnerAdapter subgroupListAdapter = new SpinnerAdapter(this,
+                android.R.layout.simple_dropdown_item_1line, new ArrayList<>(), subgroupFilter);
+        subgroupFilter.setAdapter(subgroupListAdapter);
         autoCompleteSubgroup.setAdapter(subgroupListAdapter);
 
         SearchableSpinner autoCompleteGroup = findViewById(R.id.groupSpinner);
-        GroupListFilter groupFilter = new GroupListFilter(localDatabaseRepository);
-        GroupListAdapter groupListAdapter = new GroupListAdapter(this,
+        GroupListFilter groupFilter = new GroupListFilter(repository);
+        SpinnerAdapter groupListAdapter = new SpinnerAdapter(this,
                 android.R.layout.simple_dropdown_item_1line,
                 new ArrayList<>(), groupFilter);
         groupFilter.setAdapter(groupListAdapter);
@@ -111,10 +110,9 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(View view, int position, long id) {
                 Group group = (Group) autoCompleteGroup.getSelectedItem();
-                String item = group.description;
-                if(item != null && !item.isEmpty()) {
+                if (group != null) {
                     autoCompleteSubgroup.setVisibility(View.VISIBLE);
-                    subgroupListFilter.setGroupId(group.id);
+                    subgroupFilter.setGroupId(group.id);
                 }
             }
 
