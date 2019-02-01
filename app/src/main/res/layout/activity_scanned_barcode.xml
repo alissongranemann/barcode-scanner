@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scanned_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -29,20 +30,31 @@
         android:orientation="vertical"
         android:padding="5dp">
 
-        <android.support.v7.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/groupAutoComplete"
+        <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
+            android:id="@+id/groupSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:completionThreshold="1"
-            android:hint="@string/group_text_label" />
+            app:BoarderColor="@android:color/black"
+            app:DoneSearchTintColor="@color/colorPrimaryDark"
+            app:RevealEmptyText="@string/group_spinner_placeholder"
+            app:RevealViewBackgroundColor="@android:color/white"
+            app:SearchViewBackgroundColor="@android:color/secondary_text_dark"
+            app:ShowBorders="true"
+            app:SpinnerExpandHeight="200dp"
+            app:StartSearchTintColor="@android:color/white" />
 
-        <android.support.v7.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/subgroupAutoComplete"
+        <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
+            android:id="@+id/subgroupSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:completionThreshold="1"
-            android:visibility="invisible"
-            android:hint="@string/subgroup_text_label" />
+            app:BoarderColor="@android:color/black"
+            app:DoneSearchTintColor="@color/colorPrimaryDark"
+            app:RevealEmptyText="@string/subgroup_spinner_placeholder"
+            app:RevealViewBackgroundColor="@android:color/white"
+            app:SearchViewBackgroundColor="@android:color/secondary_text_dark"
+            app:ShowBorders="true"
+            app:SpinnerExpandHeight="200dp"
+            app:StartSearchTintColor="@android:color/white" />
 
     </LinearLayout>
 

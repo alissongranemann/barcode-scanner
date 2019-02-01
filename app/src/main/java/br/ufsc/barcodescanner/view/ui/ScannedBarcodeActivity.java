@@ -39,6 +39,8 @@ import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
 import br.ufsc.barcodescanner.view.adapter.SubgroupListFilter;
 import br.ufsc.barcodescanner.viewmodel.BarcodeItemViewModel;
 import br.ufsc.barcodescanner.viewmodel.PictureViewModel;
+import gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner;
+import gr.escsoft.michaelprimez.searchablespinner.interfaces.OnItemSelectedListener;
 
 public class ScannedBarcodeActivity extends AppCompatActivity {
 
@@ -91,34 +93,35 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
         LocalDatabaseRepository localDatabaseRepository = new LocalDatabaseRepository(this);
 
-        AutoCompleteTextView autoCompleteSubgroup = findViewById(R.id.subgroupAutoComplete);
+        SearchableSpinner autoCompleteSubgroup = findViewById(R.id.subgroupSpinner);
         SubgroupListFilter subgroupListFilter = new SubgroupListFilter(localDatabaseRepository);
         GroupListAdapter subgroupListAdapter = new GroupListAdapter(this,
                 android.R.layout.simple_dropdown_item_1line, new ArrayList<>(), subgroupListFilter);
         subgroupListFilter.setAdapter(subgroupListAdapter);
         autoCompleteSubgroup.setAdapter(subgroupListAdapter);
-        autoCompleteSubgroup.setOnItemClickListener((parent, view, position, id) -> {
-            String item = ((Group) parent.getItemAtPosition(position)).description;
-            autoCompleteSubgroup.setText(item);
-        });
 
-        AutoCompleteTextView autoCompleteGroup = findViewById(R.id.groupAutoComplete);
+        SearchableSpinner autoCompleteGroup = findViewById(R.id.groupSpinner);
         GroupListFilter groupFilter = new GroupListFilter(localDatabaseRepository);
         GroupListAdapter groupListAdapter = new GroupListAdapter(this,
                 android.R.layout.simple_dropdown_item_1line,
                 new ArrayList<>(), groupFilter);
         groupFilter.setAdapter(groupListAdapter);
         autoCompleteGroup.setAdapter(groupListAdapter);
-        autoCompleteGroup.setOnItemClickListener((parent, view, position, id) -> {
-            Group group = (Group) parent.getItemAtPosition(position);
-            String item = group.description;
-            if(item != null && !item.isEmpty()) {
-                autoCompleteSubgroup.setVisibility(View.VISIBLE);
-                subgroupListFilter.setGroupId(group.id);
-            } else {
+        autoCompleteGroup.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(View view, int position, long id) {
+                Group group = (Group) autoCompleteGroup.getSelectedItem();
+                String item = group.description;
+                if(item != null && !item.isEmpty()) {
+                    autoCompleteSubgroup.setVisibility(View.VISIBLE);
+                    subgroupListFilter.setGroupId(group.id);
+                }
+            }
+
+            @Override
+            public void onNothingSelected() {
                 autoCompleteSubgroup.setVisibility(View.GONE);
             }
-            autoCompleteGroup.setText(item);
         });
     }
 

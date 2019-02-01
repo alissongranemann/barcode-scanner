@@ -22,4 +22,6 @@
     <string name="add_photo">Adicionar foto</string>
     <string name="group_text_label">Grupo</string>
     <string name="subgroup_text_label">Subgrupo</string>
+    <string name="group_spinner_placeholder">Selecione um grupo</string>
+    <string name="subgroup_spinner_placeholder">Selecione um subgrupo</string>
 </resources>
