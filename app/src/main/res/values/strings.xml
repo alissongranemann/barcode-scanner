@@ -10,7 +10,7 @@
     <string name="dialog_delete_img_message">Deseja realmente excluir esta foto?</string>
     <string name="image_detail_toolbar_title">Foto</string>
     <string name="action_delete">Excluir</string>
-    <string name="empty_list_message">Não há itens.</string>
+    <string name="empty_list_message">Não há itens</string>
     <string name="dialog_delete_item_message">Deseja realmente excluir este item?</string>
     <string name="overwrite_message">Já existe este código de barras na base de dados.</string>
     <string name="ok">Ok</string>
@@ -24,4 +24,7 @@
     <string name="subgroup_text_label">Subgrupo</string>
     <string name="group_spinner_placeholder">Selecione um grupo</string>
     <string name="subgroup_spinner_placeholder">Selecione um subgrupo</string>
+    <string name="empty_gallery_message">Não há fotos</string>
+    <string name="group_label">Grupo</string>
+    <string name="subgroup_label">Subgrupo</string>
 </resources>

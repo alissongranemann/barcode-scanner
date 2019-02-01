@@ -13,12 +13,12 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
                         onDelete = CASCADE)
         },
         indices = {
-                @Index(name = "food_subgroup_ix_description_group",
-                        value = {"description_filter", "group_id"})
+                @Index(name = "food_subgroup_ix_group",
+                        value = {"group_id"})
         },
         primaryKeys = {"id", "group_id"}
 )
-public class Subgroup implements GroupEntity {
+public class Subgroup {
 
     @ColumnInfo(name = "id")
     public int id;
@@ -26,14 +26,11 @@ public class Subgroup implements GroupEntity {
     @ColumnInfo(name = "description")
     public String description;
 
-    @ColumnInfo(name = "description_filter")
-    public String descriptionFilter;
-
     @ColumnInfo(name = "group_id")
     public int groupId;
 
     @Override
-    public String getDescription() {
+    public String toString() {
         return description;
     }
 }

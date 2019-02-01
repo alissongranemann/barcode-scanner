@@ -19,32 +19,46 @@ public class LocalDatabaseRepository {
         this.database = LocalDatabaseHelper.getInstance(context);
     }
 
-    public List<Group> loadGroups(String filter) throws ExecutionException, InterruptedException {
-        return new LoadGroupAsyncTask().execute(filter).get();
+    public List<Group> loadGroups() {
+        List<Group> groups = null;
+        try {
+            groups = new LoadGroupAsyncTask().execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return groups;
     }
 
-    public List<Subgroup> loadSubgroups(String filter, int groupId) throws ExecutionException, InterruptedException {
-        return new LoadSubgroupAsyncTask().execute(filter, String.valueOf(groupId)).get();
-    }
+    public List<Subgroup> loadSubgroups(int groupId) {
+        List<Subgroup> subgroups = null;
+        try {
+            subgroups = new LoadSubgroupAsyncTask().execute(groupId).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-    private static String likeable(String filter) {
-        return String.format("%%%s%%", filter);
+        return subgroups;
     }
 
     private class LoadGroupAsyncTask extends AsyncTask<String, Void, List<Group>> {
 
         @Override
         protected List<Group> doInBackground(String... strings) {
-            return database.groupDao().getGroups(likeable(strings[0]));
+            return database.groupDao().getGroups();
         }
 
     }
 
-    private class LoadSubgroupAsyncTask extends AsyncTask<String, Void, List<Subgroup>> {
+    private class LoadSubgroupAsyncTask extends AsyncTask<Integer, Void, List<Subgroup>> {
 
         @Override
-        protected List<Subgroup> doInBackground(String... strings) {
-            return database.subgroupDao().getSubgroups(likeable(strings[0]), Integer.getInteger(strings[1]));
+        protected List<Subgroup> doInBackground(Integer... integers) {
+            return database.subgroupDao().getSubgroups(integers[0]);
         }
 
     }

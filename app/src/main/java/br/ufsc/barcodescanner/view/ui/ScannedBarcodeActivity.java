@@ -3,6 +3,7 @@ package br.ufsc.barcodescanner.view.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,26 +21,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.Group;
+import br.ufsc.barcodescanner.service.model.Subgroup;
 import br.ufsc.barcodescanner.service.repository.LocalDatabaseRepository;
 import br.ufsc.barcodescanner.utils.UUIDManager;
 import br.ufsc.barcodescanner.view.adapter.EmptyListAdapterDataObserver;
-import br.ufsc.barcodescanner.view.adapter.SpinnerAdapter;
-import br.ufsc.barcodescanner.view.adapter.GroupListFilter;
 import br.ufsc.barcodescanner.view.adapter.PictureListViewAdapter;
-import br.ufsc.barcodescanner.view.adapter.SubgroupListFilter;
 import br.ufsc.barcodescanner.viewmodel.BarcodeItemViewModel;
 import br.ufsc.barcodescanner.viewmodel.PictureViewModel;
-import gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner;
-import gr.escsoft.michaelprimez.searchablespinner.interfaces.OnItemSelectedListener;
 
 public class ScannedBarcodeActivity extends AppCompatActivity {
 
@@ -68,7 +68,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         mTitle.setText(barcodeValue);
 
         TextView emptyView = findViewById(R.id.picture_list_empty_message);
-        RecyclerView recyclerView = findViewById(R.id.imagegallery);
+        RecyclerView recyclerView = findViewById(R.id.picture_gallery);
         recyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager =
@@ -91,34 +91,26 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
                 pictureSources -> adapter.setPictures(pictureSources));
 
         LocalDatabaseRepository repository = new LocalDatabaseRepository(this);
+        List<Group> groups = repository.loadGroups();
 
-        SearchableSpinner autoCompleteSubgroup = findViewById(R.id.subgroupSpinner);
-        SubgroupListFilter subgroupFilter = new SubgroupListFilter(repository);
-        SpinnerAdapter subgroupListAdapter = new SpinnerAdapter(this,
-                android.R.layout.simple_dropdown_item_1line, new ArrayList<>(), subgroupFilter);
-        subgroupFilter.setAdapter(subgroupListAdapter);
-        autoCompleteSubgroup.setAdapter(subgroupListAdapter);
+        Spinner subgroupSpinner = findViewById(R.id.subgroup_spinner);
 
-        SearchableSpinner autoCompleteGroup = findViewById(R.id.groupSpinner);
-        GroupListFilter groupFilter = new GroupListFilter(repository);
-        SpinnerAdapter groupListAdapter = new SpinnerAdapter(this,
-                android.R.layout.simple_dropdown_item_1line,
-                new ArrayList<>(), groupFilter);
-        groupFilter.setAdapter(groupListAdapter);
-        autoCompleteGroup.setAdapter(groupListAdapter);
-        autoCompleteGroup.setOnItemSelectedListener(new OnItemSelectedListener() {
+        Spinner groupSpinner = findViewById(R.id.group_spinner);
+        ArrayAdapter<Group> groupAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, groups);
+        groupSpinner.setAdapter(groupAdapter);
+        groupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(View view, int position, long id) {
-                Group group = (Group) autoCompleteGroup.getSelectedItem();
-                if (group != null) {
-                    autoCompleteSubgroup.setVisibility(View.VISIBLE);
-                    subgroupFilter.setGroupId(group.id);
-                }
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Group group = (Group) parent.getItemAtPosition(position);
+                List<Subgroup> subgroups = repository.loadSubgroups(group.id);
+                ArrayAdapter<Subgroup> subgroupAdapter = new ArrayAdapter<>(ScannedBarcodeActivity.this, android.R.layout.simple_dropdown_item_1line, subgroups);
+                subgroupSpinner.setAdapter(subgroupAdapter);
+                subgroupSpinner.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void onNothingSelected() {
-                autoCompleteSubgroup.setVisibility(View.GONE);
+            public void onNothingSelected(AdapterView<?> parent) {
+                subgroupSpinner.setVisibility(View.GONE);
             }
         });
     }

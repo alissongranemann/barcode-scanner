@@ -5,10 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "food_group", indices = {
-        @Index(name = "food_group_ix_description", value = {"description_filter"})
-})
-public class Group implements GroupEntity {
+@Entity(tableName = "food_group")
+public class Group {
 
     @PrimaryKey
     public int id;
@@ -16,11 +14,9 @@ public class Group implements GroupEntity {
     @ColumnInfo(name = "description")
     public String description;
 
-    @ColumnInfo(name = "description_filter")
-    public String descriptionFilter;
-
     @Override
-    public String getDescription() {
+    public String toString() {
         return description;
     }
+
 }

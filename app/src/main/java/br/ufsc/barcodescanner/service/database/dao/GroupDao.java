@@ -10,10 +10,8 @@ import br.ufsc.barcodescanner.service.model.Group;
 @Dao
 public interface GroupDao {
 
-    @Query("SELECT * FROM food_group WHERE description_filter like :groupFilter")
-    List<Group> getGroups(String groupFilter);
-
     @Query("SELECT * FROM food_group")
     List<Group> getGroups();
+
 }
 
