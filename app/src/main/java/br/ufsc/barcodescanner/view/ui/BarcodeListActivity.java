@@ -81,7 +81,7 @@ public class BarcodeListActivity extends AppCompatActivity implements OnItemLong
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_delete_item_message)
                 .setPositiveButton(R.string.positive, (dialog, id1) -> {
-                    viewModel.delete(item.value);
+                    viewModel.delete(item);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id12) -> {
                     // Do nothing

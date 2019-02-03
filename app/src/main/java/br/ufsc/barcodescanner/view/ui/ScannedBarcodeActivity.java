@@ -50,6 +50,8 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
     private BarcodeItemViewModel barcodeItemViewModel;
     private PictureViewModel pictureViewModel;
+    private Spinner groupSpinner;
+    private Spinner subgroupSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +95,8 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         LocalDatabaseRepository repository = new LocalDatabaseRepository(this);
         List<Group> groups = repository.loadGroups();
 
-        Spinner subgroupSpinner = findViewById(R.id.subgroup_spinner);
-
-        Spinner groupSpinner = findViewById(R.id.group_spinner);
+        this.subgroupSpinner = findViewById(R.id.subgroup_spinner);
+        this.groupSpinner = findViewById(R.id.group_spinner);
         ArrayAdapter<Group> groupAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, groups);
         groupSpinner.setAdapter(groupAdapter);
         groupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -140,7 +141,10 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
     private void saveItem() {
         Toast.makeText(getApplicationContext(), getString(R.string.item_saved),
                 Toast.LENGTH_SHORT).show();
-        barcodeItemViewModel.insert(this.barcodeValue, UUIDManager.id(this));
+        final Group group = (Group) this.groupSpinner.getSelectedItem();
+        final Subgroup subgroup = (Subgroup) subgroupSpinner.getSelectedItem();
+        barcodeItemViewModel.insert(this.barcodeValue, UUIDManager.id(this),
+                group.id, subgroup.id, this.pictureViewModel.getPicturesSize());
         super.onBackPressed();
     }
 

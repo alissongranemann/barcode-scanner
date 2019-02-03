@@ -16,7 +16,7 @@ public class Group {
 
     @Override
     public String toString() {
-        return description;
+         return String.format("%d - %s", id, description);
     }
 
 }

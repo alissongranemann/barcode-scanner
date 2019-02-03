@@ -11,6 +11,15 @@ public class Barcode {
     // created_at
     public long dt;
 
+    // group
+    public int g;
+
+    // subgroup
+    public int sg;
+
+    // img count
+    public int ic;
+
     @Exclude
     public String value;
 

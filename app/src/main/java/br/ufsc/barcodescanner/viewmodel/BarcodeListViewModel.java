@@ -27,8 +27,8 @@ public class BarcodeListViewModel extends AbstractBarcodeViewModel implements Ba
         repository.loadPage(page -> barcodeList.setValue(page));
     }
 
-    public void delete(String barcodeValue) {
-        repository.delete(barcodeValue, aVoid -> storage.delete(externalStoragePath, barcodeValue));
+    public void delete(Barcode barcode) {
+        repository.delete(barcode.value, aVoid -> storage.delete(barcode));
     }
 
     public void setExternalStoragePath(String externalStoragePath) {

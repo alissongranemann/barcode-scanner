@@ -31,6 +31,6 @@ public class Subgroup {
 
     @Override
     public String toString() {
-        return description;
+        return String.format("%d - %s", id, description);
     }
 }

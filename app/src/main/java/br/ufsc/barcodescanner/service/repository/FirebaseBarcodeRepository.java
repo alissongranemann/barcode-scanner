@@ -12,7 +12,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import br.ufsc.barcodescanner.service.model.Barcode;
@@ -81,15 +80,8 @@ public class FirebaseBarcodeRepository {
         reference.addListenerForSingleValueEvent(listener);
     }
 
-    public Barcode save(String barcodeValue, String uuid, OnSuccessListener<Void> sucessListener) {
-        Barcode barcode = new Barcode();
-        barcode.value = barcodeValue;
-        barcode.dt = new Date().getTime();
-        barcode.id = uuid;
-
+    public void save(Barcode barcode, OnSuccessListener<Void> sucessListener) {
         reference.child(barcode.value).setValue(barcode).addOnSuccessListener(sucessListener);
-
-        return barcode;
     }
 
     public void delete(String barcodeValue, OnSuccessListener<Void> handler) {
