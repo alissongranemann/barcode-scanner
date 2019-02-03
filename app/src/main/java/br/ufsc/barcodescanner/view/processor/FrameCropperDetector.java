@@ -12,13 +12,13 @@ import com.google.android.gms.vision.Frame;
 
 import java.io.ByteArrayOutputStream;
 
-public class BoxDetector extends Detector {
+public class FrameCropperDetector extends Detector {
 
     private static String TAG = "CameraCrop";
 
     private Detector mDelegate;
 
-    public BoxDetector(Detector delegate) {
+    public FrameCropperDetector(Detector delegate) {
         mDelegate = delegate;
     }
 

@@ -9,19 +9,19 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-public class CameraViewCrop extends ViewGroup {
+public class CameraViewRectangle extends ViewGroup {
 
     private static final String TAG = "CameraCrop";
 
-    public CameraViewCrop(Context context) {
+    public CameraViewRectangle(Context context) {
         super(context);
     }
 
-    public CameraViewCrop(Context context, AttributeSet attrs) {
+    public CameraViewRectangle(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CameraViewCrop(Context context, AttributeSet attrs, int defStyle) {
+    public CameraViewRectangle(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

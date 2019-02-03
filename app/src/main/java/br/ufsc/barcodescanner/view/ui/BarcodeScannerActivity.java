@@ -33,7 +33,7 @@ import java.io.IOException;
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.view.BarcodeScannedHandler;
 import br.ufsc.barcodescanner.view.processor.BarcodeProcessor;
-import br.ufsc.barcodescanner.view.processor.BoxDetector;
+import br.ufsc.barcodescanner.view.processor.FrameCropperDetector;
 import br.ufsc.barcodescanner.view.ui.camera.CameraSource;
 import br.ufsc.barcodescanner.view.ui.camera.CameraSourcePreview;
 import br.ufsc.barcodescanner.viewmodel.BarcodeItemViewModel;
@@ -130,7 +130,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
                 .setBarcodeFormats(Barcode.EAN_8 | Barcode.EAN_13 | Barcode.UPC_A
                         | Barcode.UPC_E | Barcode.ITF | Barcode.CODE_39 | Barcode.CODE_128)
                 .build();
-        BoxDetector boxDetector = new BoxDetector(barcodeDetector);
+        FrameCropperDetector boxDetector = new FrameCropperDetector(barcodeDetector);
 
         boxDetector.setProcessor(new BarcodeProcessor(this));
 

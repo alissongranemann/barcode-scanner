@@ -18,10 +18,10 @@
 
     </br.ufsc.barcodescanner.view.ui.camera.CameraSourcePreview>
 
-    <br.ufsc.barcodescanner.view.ui.CameraViewCrop
+    <br.ufsc.barcodescanner.view.ui.CameraViewRectangle
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#B3000000"></br.ufsc.barcodescanner.view.ui.CameraViewCrop>
+        android:background="#B3000000"></br.ufsc.barcodescanner.view.ui.CameraViewRectangle>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/barcode_list_fab"
