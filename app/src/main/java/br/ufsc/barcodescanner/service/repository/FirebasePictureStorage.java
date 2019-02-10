@@ -20,10 +20,16 @@ public class FirebasePictureStorage {
         storage = FirebaseStorage.getInstance();
     }
 
+    private static String getDir(Barcode barcode) {
+        return "Grupo " + barcode.g + '/' + "Subgrupo " +
+                barcode.sg + '/' + barcode.value;
+    }
+
     public void uploadDir(String externalStoragePath, final Barcode barcode) {
         File dir = new File(externalStoragePath, barcode.value);
         if (!dir.exists() || !dir.isDirectory()) {
-            Log.e(TAG, String.format("Uploading %s failed, invalid directory", barcode.value));
+            Log.e(TAG, String.format("Uploading [%s] failed, invalid directory: [%s]",
+                    barcode.value, dir.getPath()));
             return;
         }
         String dirName = getDir(barcode);
@@ -35,10 +41,13 @@ public class FirebasePictureStorage {
             barcodeReference.child(uri.getLastPathSegment()).putFile(uri)
                     .addOnSuccessListener(taskSnapshot -> {
                         file.delete();
-                        Log.d(TAG, "Upload succeed!");
+                        Log.i(TAG, String.format("Uploading [%s] succeed!", barcode.value));
                     })
-                    .addOnFailureListener(e -> Log.e(TAG, "Upload failed: " + e.getMessage()));
+                    .addOnFailureListener(e -> Log.e(TAG,
+                            String.format("Uploading [%s] failed: %s", barcode.value,
+                                    e.getMessage())));
         }
+        dir.delete();
     }
 
     public void delete(final Barcode barcode) {
@@ -48,16 +57,11 @@ public class FirebasePictureStorage {
             final String filename = String.format("%s_%d.jpg", barcode.value, i);
             barcodeReference.child(filename).delete()
                     .addOnSuccessListener(aVoid -> {
-                        Log.d(TAG, String.format("File %s deleted!", filename));
+                        Log.d(TAG, String.format("File [%s] deleted!", filename));
                     })
                     .addOnFailureListener(e -> Log.e(TAG,
                             String.format("Delete file [%s] failed: %s", filename, e.getMessage())));
         }
-    }
-
-    private static String getDir(Barcode barcode) {
-        return "Grupo " + barcode.g + '/' + "Subgrupo " +
-                barcode.sg + '/' + barcode.value;
     }
 
 }

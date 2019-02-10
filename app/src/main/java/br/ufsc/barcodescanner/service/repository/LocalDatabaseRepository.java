@@ -2,6 +2,7 @@ package br.ufsc.barcodescanner.service.repository;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -13,6 +14,7 @@ import br.ufsc.barcodescanner.service.model.Subgroup;
 
 public class LocalDatabaseRepository {
 
+    private static final String TAG = "LocalDatabaseRepository";
     private LocalDatabase database;
 
     public LocalDatabaseRepository(Context context) {
@@ -24,9 +26,9 @@ public class LocalDatabaseRepository {
         try {
             groups = new LoadGroupAsyncTask().execute().get();
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Load group page execution failed: " + e.getMessage());
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Load group page interrupted: " + e.getMessage());
         }
 
         return groups;
@@ -37,9 +39,9 @@ public class LocalDatabaseRepository {
         try {
             subgroups = new LoadSubgroupAsyncTask().execute(groupId).get();
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Load subgroup page execution failed: " + e.getMessage());
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Load subgroup page interrupted: " + e.getMessage());
         }
 
         return subgroups;

@@ -16,6 +16,7 @@ import java.util.List;
 
 import br.ufsc.barcodescanner.R;
 import br.ufsc.barcodescanner.service.model.Barcode;
+import br.ufsc.barcodescanner.utils.UUIDManager;
 import br.ufsc.barcodescanner.view.OnItemLongClickListener;
 import br.ufsc.barcodescanner.view.adapter.EmptyListAdapterDataObserver;
 import br.ufsc.barcodescanner.view.adapter.ItemListViewAdapter;
@@ -60,8 +61,8 @@ public class BarcodeListActivity extends AppCompatActivity implements OnItemLong
         adapter.registerAdapterDataObserver(new EmptyListAdapterDataObserver(emptyView, adapter));
     }
 
-    private void refreshList(List<Barcode> barcodes) {
-        adapter.setBarcodes(barcodes);
+    private void refreshList(List<Barcode> barcodeList) {
+        adapter.setBarcodes(barcodeList);
     }
 
     @Override
@@ -78,14 +79,24 @@ public class BarcodeListActivity extends AppCompatActivity implements OnItemLong
 
     @Override
     public void onItemClick(Barcode item) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.dialog_delete_item_message)
-                .setPositiveButton(R.string.positive, (dialog, id1) -> {
-                    viewModel.delete(item);
-                })
-                .setNegativeButton(R.string.cancel, (dialog, id12) -> {
-                    // Do nothing
-                }).show();
+        final String uuid = UUIDManager.id(this);
+        if (item.id.compareTo(uuid) == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.dialog_delete_item_message)
+                    .setPositiveButton(R.string.positive, (dialog, id1) -> {
+                        viewModel.delete(item);
+                    })
+                    .setNegativeButton(R.string.cancel, (dialog, id12) -> {
+                        // Do nothing
+                    }).show();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.denied_delete_message)
+                    .setNeutralButton(R.string.ok,
+                            (dialog, id1) -> {
+                                // Do nothing
+                            }).show();
+        }
     }
 
 }

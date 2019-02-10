@@ -27,4 +27,5 @@
     <string name="empty_gallery_message">Não há fotos</string>
     <string name="group_label">Grupo</string>
     <string name="subgroup_label">Subgrupo</string>
+    <string name="denied_delete_message">Não é possível deleter itens que não pertencem à você.</string>
 </resources>

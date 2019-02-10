@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -79,9 +81,9 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
         super.onStart();
         mAuth.signInAnonymously().addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
-                Log.d(TAG, "signInAnonymously:success");
+                Log.d(TAG, "signInAnonymously success");
             } else {
-                Log.w(TAG, "signInAnonymously:failure", task.getException());
+                Log.w(TAG, "signInAnonymously failure: ", task.getException());
             }
         });
     }
@@ -120,6 +122,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
                 RC_HANDLE_CAMERA_PERM);
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("InlinedApi")
     private void createCameraSource() {
         Context context = getApplicationContext();
@@ -137,8 +140,8 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
         if (!boxDetector.isOperational()) {
             Log.w(TAG, "Detector dependencies are not yet available.");
 
-            IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
-            boolean hasLowStorage = registerReceiver(null, lowstorageFilter) != null;
+            IntentFilter lowStorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
+            boolean hasLowStorage = registerReceiver(null, lowStorageFilter) != null;
 
             if (hasLowStorage) {
                 Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
@@ -146,20 +149,23 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
             }
         }
 
-        cameraSource = new CameraSource.Builder(this, boxDetector)
-//                .setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
+        CameraSource.Builder builder = new CameraSource.Builder(this, boxDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedPreviewSize(metrics.heightPixels, metrics.widthPixels)
-                .setRequestedFps(30.0f)
-                .build();
+                .setRequestedFps(30.0f);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        }
+        cameraSource = builder.build();
     }
 
     private void startCameraSource() throws SecurityException {
         int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
                 getApplicationContext());
         if (code != ConnectionResult.SUCCESS) {
-            Dialog dlg =
-                    GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
+            Dialog dlg = GoogleApiAvailability.getInstance()
+                    .getErrorDialog(this, code, RC_HANDLE_GMS);
             dlg.show();
         }
 
@@ -199,7 +205,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
         DialogInterface.OnClickListener listener = (dialog, id) -> finish();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Multitracker sample")
+        builder.setTitle("Barcode scanner")
                 .setMessage(R.string.no_camera_permission)
                 .setPositiveButton(R.string.ok, listener)
                 .show();

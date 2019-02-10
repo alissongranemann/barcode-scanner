@@ -48,7 +48,6 @@ public class LocalDatabaseHelper {
                         }
                     })
                     .fallbackToDestructiveMigration()
-                    //.allowMainThreadQueries()
                     .build();
         }
 

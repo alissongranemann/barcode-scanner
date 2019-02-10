@@ -1,6 +1,7 @@
 package br.ufsc.barcodescanner.service.repository;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -22,10 +23,11 @@ public class FirebaseBarcodeRepository {
 
     private static final String BARCODE_PATH = "barcodes";
     private static final int PAGE_LENGTH = 10;
+    private static final String TAG = "BarcodeRepository";
 
     static {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        FirebaseDatabase.getInstance().setPersistenceCacheSizeBytes(20000000);
+        FirebaseDatabase.getInstance().setPersistenceCacheSizeBytes(50000000);
     }
 
     private final DatabaseReference reference;
@@ -58,7 +60,7 @@ public class FirebaseBarcodeRepository {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.e(TAG, "Load page cancelled: " + databaseError.getMessage());
             }
         };
         query.addListenerForSingleValueEvent(listener);
@@ -74,23 +76,32 @@ public class FirebaseBarcodeRepository {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.e(TAG, String.format("Check if [%s] was already inserted failed: ",
+                        barcodeValue, databaseError.getMessage()));
             }
         };
         reference.addListenerForSingleValueEvent(listener);
     }
 
-    public void save(Barcode barcode, OnSuccessListener<Void> sucessListener) {
-        reference.child(barcode.value).setValue(barcode).addOnSuccessListener(sucessListener);
+    public void save(Barcode barcode, OnSuccessListener<Void> successListener) {
+        reference.child(barcode.value).setValue(barcode)
+                .addOnSuccessListener(successListener)
+                .addOnFailureListener(e -> Log.e(TAG,
+                        String.format(("Save barcode [%s] failed: %s"),
+                                barcode.value, e.getMessage())));
     }
 
     public void delete(String barcodeValue, OnSuccessListener<Void> handler) {
-        reference.child(barcodeValue).removeValue().addOnSuccessListener(handler);
+        reference.child(barcodeValue).removeValue()
+                .addOnSuccessListener(handler)
+                .addOnFailureListener(e -> Log.e(TAG,
+                        String.format(("Delete barcode [%s] failed: %s"),
+                                barcodeValue, e.getMessage())));
     }
 
     public interface LoadPageHandler {
 
-        void handle(List<Barcode> barcodes);
+        void handle(List<Barcode> barcodeList);
 
     }
 

@@ -18,6 +18,7 @@ package br.ufsc.barcodescanner.view.ui.camera;
 import android.Manifest;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.support.annotation.RequiresPermission;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -47,11 +48,13 @@ public class CameraSourcePreview extends ViewGroup {
         mSurfaceView.getHolder().addCallback(new SurfaceCallback());
         addView(mSurfaceView);
 
-        setOnClickListener(v -> {
-            if (mCameraSource != null) {
-                mCameraSource.autoFocus(null);
-            }
-        });
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            setOnClickListener(v -> {
+                if (mCameraSource != null) {
+                    mCameraSource.autoFocus(null);
+                }
+            });
+        }
     }
 
     @RequiresPermission(Manifest.permission.CAMERA)

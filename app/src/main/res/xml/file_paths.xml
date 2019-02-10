@@ -2,5 +2,5 @@
 <paths>
     <external-path
         name="my_images"
-        path="Android/data/br.ufsc.barcodescanner/files/Pictures" />
+        path="." />
 </paths>

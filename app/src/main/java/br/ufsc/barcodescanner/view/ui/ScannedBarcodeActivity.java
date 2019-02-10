@@ -3,7 +3,6 @@ package br.ufsc.barcodescanner.view.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,6 +57,12 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanned_barcode);
 
+        setToolbar();
+        createListSection();
+        createGroupSection();
+    }
+
+    private void setToolbar() {
         Intent intent = getIntent();
         this.barcodeValue = intent.getStringExtra(BarcodeScannerActivity.BARCODE_VALUE);
 
@@ -68,7 +73,35 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
         TextView mTitle = myToolbar.findViewById(R.id.scanned_item_toolbar_title);
         mTitle.setText(barcodeValue);
+    }
 
+    private void createGroupSection() {
+        LocalDatabaseRepository repository = new LocalDatabaseRepository(this);
+        List<Group> groups = repository.loadGroups();
+
+        this.subgroupSpinner = findViewById(R.id.subgroup_spinner);
+        this.groupSpinner = findViewById(R.id.group_spinner);
+        ArrayAdapter<Group> groupAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, groups);
+        groupSpinner.setAdapter(groupAdapter);
+        groupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Group group = (Group) parent.getItemAtPosition(position);
+                List<Subgroup> subgroups = repository.loadSubgroups(group.id);
+                ArrayAdapter<Subgroup> subgroupAdapter =
+                        new ArrayAdapter<>(ScannedBarcodeActivity.this,
+                                android.R.layout.simple_dropdown_item_1line, subgroups);
+                subgroupSpinner.setAdapter(subgroupAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    private void createListSection() {
         TextView emptyView = findViewById(R.id.picture_list_empty_message);
         RecyclerView recyclerView = findViewById(R.id.picture_gallery);
         recyclerView.setHasFixedSize(true);
@@ -91,30 +124,8 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         pictureViewModel.setExternalStoragePath(picturesPath);
         pictureViewModel.getPictures().observe(this,
                 pictureSources -> adapter.setPictures(pictureSources));
-
-        LocalDatabaseRepository repository = new LocalDatabaseRepository(this);
-        List<Group> groups = repository.loadGroups();
-
-        this.subgroupSpinner = findViewById(R.id.subgroup_spinner);
-        this.groupSpinner = findViewById(R.id.group_spinner);
-        ArrayAdapter<Group> groupAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, groups);
-        groupSpinner.setAdapter(groupAdapter);
-        groupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Group group = (Group) parent.getItemAtPosition(position);
-                List<Subgroup> subgroups = repository.loadSubgroups(group.id);
-                ArrayAdapter<Subgroup> subgroupAdapter = new ArrayAdapter<>(ScannedBarcodeActivity.this, android.R.layout.simple_dropdown_item_1line, subgroups);
-                subgroupSpinner.setAdapter(subgroupAdapter);
-                subgroupSpinner.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                subgroupSpinner.setVisibility(View.GONE);
-            }
-        });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -187,7 +198,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             } catch (IOException e) {
-                Log.e(TAG, "Error at camera source start: " + e.getMessage());
+                Log.e(TAG, "Dispatch take picture intent failed: " + e.getMessage());
             } catch (IllegalArgumentException e) {
                 Log.e(TAG, "Error getUriForFile: " + e.getMessage());
             }
@@ -197,7 +208,6 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Log.d(TAG, "Reloading recycler view.");
             this.pictureViewModel.createPicture();
         }
     }

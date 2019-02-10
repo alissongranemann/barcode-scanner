@@ -2,7 +2,6 @@ package br.ufsc.barcodescanner.service.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity(tableName = "food_group")
@@ -16,7 +15,7 @@ public class Group {
 
     @Override
     public String toString() {
-         return String.format("%d - %s", id, description);
+        return String.format("%d - %s", id, description);
     }
 
 }

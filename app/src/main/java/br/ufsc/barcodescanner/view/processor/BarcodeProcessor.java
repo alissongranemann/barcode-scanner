@@ -24,9 +24,11 @@ public class BarcodeProcessor implements Detector.Processor<Barcode> {
 
     @Override
     public void receiveDetections(Detector.Detections<Barcode> detections) {
-        final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-        if (barcodes.size() != 0) {
-            barcodeScannedHandler.onObjectDetected(barcodes.valueAt(0).displayValue);
+        final SparseArray<Barcode> barcodeList = detections.getDetectedItems();
+        if (barcodeList.size() != 0) {
+            String value = barcodeList.valueAt(0).displayValue;
+            Log.d(TAG, "Barcode detected: " + value);
+            barcodeScannedHandler.onObjectDetected(value);
         }
     }
 

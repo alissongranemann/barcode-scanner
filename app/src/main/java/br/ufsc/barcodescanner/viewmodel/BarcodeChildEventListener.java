@@ -19,29 +19,29 @@ public class BarcodeChildEventListener implements ChildEventListener {
 
     @Override
     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        Log.i(TAG, "Child added.");
+        Log.i(TAG, String.format("Child [%s] added", dataSnapshot.getKey()));
         observer.reload();
     }
 
     @Override
     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        Log.i(TAG, "Child changed.");
+        Log.i(TAG, String.format("Child [%s] changed", dataSnapshot.getKey()));
     }
 
     @Override
     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-        Log.i(TAG, "Child removed.");
+        Log.i(TAG, String.format("Child [%s] removed", dataSnapshot.getKey()));
         observer.reload();
     }
 
     @Override
     public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        Log.i(TAG, "Child moved.");
+        Log.i(TAG, String.format("Child [%s] moved", dataSnapshot.getKey()));
     }
 
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
-        Log.i(TAG, "Firebase cancelled.");
+        Log.i(TAG, "Child listener cancelled: " + databaseError.getMessage());
     }
 
 }
