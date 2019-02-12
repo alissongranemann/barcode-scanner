@@ -1,28 +1,32 @@
 package br.ufsc.barcodescanner.service.model;
 
 
-import com.google.firebase.database.Exclude;
-
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Barcode {
 
-    // user_uuid
-    public String id;
+    public String user_uuid;
 
-    // created_at
-    public long dt;
+    public long created_at;
 
-    // group
-    public int g;
+    public int group;
 
-    // subgroup
-    public int sg;
+    public int subgroup;
 
-    @Exclude
     public String value;
 
-    public Map<String, String> img;
+    public Map<String, String> images;
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("uid", user_uuid);
+        values.put("dt", created_at);
+        values.put("grp", group);
+        values.put("sgp", subgroup);
+        values.put("img", images);
+
+        return values;
+    }
 
 }

@@ -3,13 +3,12 @@ package br.ufsc.barcodescanner.service.repository;
 import android.net.Uri;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import br.ufsc.barcodescanner.service.model.Barcode;
 import br.ufsc.barcodescanner.service.model.PictureUrl;
@@ -50,16 +49,13 @@ public class FirebasePictureStorage {
                 if (task.isSuccessful()) {
                     Log.d(TAG, String.format("Uploading [%s] succeed!", filename));
                     Uri downloadUri = task.getResult();
-                    Log.d(TAG, "Download uri:" + downloadUri);
                     if (downloadUri != null) {
                         String photoStringLink = downloadUri.toString();
                         storageFileUploadedCallback.update(new PictureUrl(filename, photoStringLink));
                     }
                     file.delete();
                 } else {
-                    Log.e(TAG,
-                            String.format("Uploading [%s] failed: %s", barcode.value,
-                                    task.getException().getMessage()));
+                    Crashlytics.logException(task.getException());
                 }
             });
             dir.delete();
@@ -68,13 +64,12 @@ public class FirebasePictureStorage {
 
     public void delete(final Barcode barcode) {
         StorageReference barcodeReference = storage.getReference(barcode.value);
-        for (String filename : barcode.img.keySet()) {
+        for (String filename : barcode.images.keySet()) {
             barcodeReference.child(filename + ".jpg").delete()
                     .addOnSuccessListener(aVoid -> {
                         Log.d(TAG, String.format("File [%s] deleted!", filename));
                     })
-                    .addOnFailureListener(e -> Log.e(TAG,
-                            String.format("Delete file [%s] failed: %s", filename, e.getMessage())));
+                    .addOnFailureListener(e -> Crashlytics.logException(e));
         }
     }
 

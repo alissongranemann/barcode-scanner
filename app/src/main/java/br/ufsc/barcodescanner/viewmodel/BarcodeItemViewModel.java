@@ -3,7 +3,6 @@ package br.ufsc.barcodescanner.viewmodel;
 import android.util.Log;
 
 import java.util.Date;
-import java.util.List;
 
 import br.ufsc.barcodescanner.service.model.Barcode;
 import br.ufsc.barcodescanner.service.model.PictureUrl;
@@ -17,10 +16,10 @@ public class BarcodeItemViewModel extends AbstractBarcodeViewModel {
                        int subgroupId) {
         Barcode barcode = new Barcode();
         barcode.value = barcodeValue;
-        barcode.dt = new Date().getTime();
-        barcode.id = uuid;
-        barcode.g = groupId;
-        barcode.sg = subgroupId;
+        barcode.created_at = new Date().getTime();
+        barcode.user_uuid = uuid;
+        barcode.group = groupId;
+        barcode.subgroup = subgroupId;
 
         repository.save(barcode, successResult -> {
             Log.d(TAG, String.format("Barcode [%s] successfully saved", barcodeValue));

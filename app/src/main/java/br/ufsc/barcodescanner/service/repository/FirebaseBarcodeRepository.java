@@ -3,6 +3,7 @@ package br.ufsc.barcodescanner.service.repository;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import br.ufsc.barcodescanner.service.model.Barcode;
-import br.ufsc.barcodescanner.service.model.PictureUrl;
 import br.ufsc.barcodescanner.viewmodel.BarcodeChildEventListener;
 
 
@@ -87,27 +87,23 @@ public class FirebaseBarcodeRepository {
     }
 
     public void save(Barcode barcode, OnSuccessListener<Void> successListener) {
-        reference.child(barcode.value).setValue(barcode)
+        reference.child(barcode.value).setValue(barcode.toMap())
                 .addOnSuccessListener(successListener)
-                .addOnFailureListener(e -> Log.e(TAG,
-                        String.format(("Save barcode [%s] failed: %s"),
-                                barcode.value, e.getMessage())));
+                .addOnFailureListener(e -> Crashlytics.logException(e));
     }
 
     public void delete(String barcodeValue, OnSuccessListener<Void> handler) {
         reference.child(barcodeValue).removeValue()
                 .addOnSuccessListener(handler)
-                .addOnFailureListener(e -> Log.e(TAG,
-                        String.format(("Delete barcode [%s] failed: %s"),
-                                barcodeValue, e.getMessage())));
+                .addOnFailureListener(e -> Crashlytics.logException(e));
     }
 
     public void update(Barcode barcode, Map<String, String> photoUrl) {
-        if(barcode.img == null) {
-            barcode.img = new HashMap<>();
+        if (barcode.images == null) {
+            barcode.images = new HashMap<>();
         }
-        barcode.img.putAll(photoUrl);
-        reference.child(barcode.value).setValue(barcode)
+        barcode.images.putAll(photoUrl);
+        reference.child(barcode.value).child("img").setValue(photoUrl)
                 .addOnCompleteListener(task -> Log.d(TAG, "Barcode updated with image: "
                         + photoUrl.toString()));
     }

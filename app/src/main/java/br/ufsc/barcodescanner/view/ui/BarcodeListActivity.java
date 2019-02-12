@@ -80,7 +80,7 @@ public class BarcodeListActivity extends AppCompatActivity implements OnItemLong
     @Override
     public void onItemClick(Barcode item) {
         final String uuid = UUIDManager.id(this);
-        if (item.id.compareTo(uuid) == 0) {
+        if (item.user_uuid != null && item.user_uuid.compareTo(uuid) == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.dialog_delete_item_message)
                     .setPositiveButton(R.string.positive, (dialog, id1) -> {
