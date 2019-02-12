@@ -103,7 +103,7 @@ public class FirebaseBarcodeRepository {
             barcode.images = new HashMap<>();
         }
         barcode.images.putAll(photoUrl);
-        reference.child(barcode.value).child("img").setValue(photoUrl)
+        reference.child(barcode.value).child("img").setValue(barcode.images)
                 .addOnCompleteListener(task -> Log.d(TAG, "Barcode updated with image: "
                         + photoUrl.toString()));
     }
