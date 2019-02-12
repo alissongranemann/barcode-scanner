@@ -155,7 +155,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         final Group group = (Group) this.groupSpinner.getSelectedItem();
         final Subgroup subgroup = (Subgroup) subgroupSpinner.getSelectedItem();
         barcodeItemViewModel.insert(this.barcodeValue, UUIDManager.id(this),
-                group.id, subgroup.id, this.pictureViewModel.getPicturesSize());
+                group.id, subgroup.id);
         super.onBackPressed();
     }
 

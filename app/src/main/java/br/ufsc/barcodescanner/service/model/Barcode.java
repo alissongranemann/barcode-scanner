@@ -3,6 +3,9 @@ package br.ufsc.barcodescanner.service.model;
 
 import com.google.firebase.database.Exclude;
 
+import java.util.List;
+import java.util.Map;
+
 public class Barcode {
 
     // user_uuid
@@ -17,10 +20,9 @@ public class Barcode {
     // subgroup
     public int sg;
 
-    // img count
-    public int ic;
-
     @Exclude
     public String value;
+
+    public Map<String, String> img;
 
 }

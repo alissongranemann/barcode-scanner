@@ -28,4 +28,13 @@
     <string name="group_label">Grupo</string>
     <string name="subgroup_label">Subgrupo</string>
     <string name="denied_delete_message">Não é possível deleter itens que não pertencem à você.</string>
+    <string name="privacy_policy">
+        This privacy policy applies to the following apps: Barcode Scanner\n
+        This policy is required because the CAMERA permissions are used by the app.\n
+        Any data from the camera is used within the app only for the purpose of the app functionality.\n
+        For the Barcode Scanner app, items are scanned through the camera functions, hence the android.permission.CAMERA permission.\n
+        We do NOT collect or share any of your Personal information.\n
+        We do NOT collect or share any of your non-Personal information.\n
+        We do NOT collect or share any of the data from your microphone or camera.\n
+    </string>
 </resources>

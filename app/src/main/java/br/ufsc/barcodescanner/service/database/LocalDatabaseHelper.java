@@ -36,7 +36,7 @@ public class LocalDatabaseHelper {
                                 String line;
                                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
                                 while ((line = reader.readLine()) != null) {
-                                    Log.i("SQL Script", line);
+                                    Log.d("SQL Script", line);
                                     if (!line.isEmpty() && !line.trim().startsWith("--"))
                                         db.execSQL(line);
                                 }

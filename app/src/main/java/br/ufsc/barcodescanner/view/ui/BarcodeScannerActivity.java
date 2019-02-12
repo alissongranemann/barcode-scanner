@@ -70,7 +70,12 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
         } else {
-            requestCameraPermission();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Política de privacidade")
+                    .setMessage(R.string.privacy_policy)
+                    .setNeutralButton(R.string.ok, (dialog, which) -> {
+                        requestCameraPermission();
+                    }).show();
         }
 
         viewModel = ViewModelProviders.of(this).get(BarcodeItemViewModel.class);

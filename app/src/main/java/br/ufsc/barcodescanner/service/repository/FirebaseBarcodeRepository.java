@@ -13,9 +13,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.ufsc.barcodescanner.service.model.Barcode;
+import br.ufsc.barcodescanner.service.model.PictureUrl;
 import br.ufsc.barcodescanner.viewmodel.BarcodeChildEventListener;
 
 
@@ -97,6 +100,16 @@ public class FirebaseBarcodeRepository {
                 .addOnFailureListener(e -> Log.e(TAG,
                         String.format(("Delete barcode [%s] failed: %s"),
                                 barcodeValue, e.getMessage())));
+    }
+
+    public void update(Barcode barcode, Map<String, String> photoUrl) {
+        if(barcode.img == null) {
+            barcode.img = new HashMap<>();
+        }
+        barcode.img.putAll(photoUrl);
+        reference.child(barcode.value).setValue(barcode)
+                .addOnCompleteListener(task -> Log.d(TAG, "Barcode updated with image: "
+                        + photoUrl.toString()));
     }
 
     public interface LoadPageHandler {

@@ -36,10 +36,6 @@ public class PictureViewModel extends ViewModel {
     }
 
 
-    public int getPicturesSize() {
-        return pictures.getValue().size();
-    }
-
     public void clearPictureDir(String barcodeValue) {
         FileUtils.clearDir(new File(externalStoragePath, barcodeValue));
         this.pictures.setValue(new ArrayList<>());

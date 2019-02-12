@@ -628,7 +628,7 @@ public class CameraSource {
                     mFocusMode)) {
                 parameters.setFocusMode(mFocusMode);
             } else {
-                Log.i(TAG, "Camera focus mode: " + mFocusMode + " is not supported on this device.");
+                Log.d(TAG, "Camera focus mode: " + mFocusMode + " is not supported on this device.");
             }
         }
 
@@ -640,7 +640,7 @@ public class CameraSource {
                     mFlashMode)) {
                 parameters.setFlashMode(mFlashMode);
             } else {
-                Log.i(TAG, "Camera flash mode: " + mFlashMode + " is not supported on this device.");
+                Log.d(TAG, "Camera flash mode: " + mFlashMode + " is not supported on this device.");
             }
         }
 
