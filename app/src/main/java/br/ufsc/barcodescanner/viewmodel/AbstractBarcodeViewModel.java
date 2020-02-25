@@ -19,4 +19,5 @@ public abstract class AbstractBarcodeViewModel extends ViewModel {
     public void setExternalStoragePath(String externalStoragePath) {
         this.externalStoragePath = externalStoragePath;
     }
+
 }

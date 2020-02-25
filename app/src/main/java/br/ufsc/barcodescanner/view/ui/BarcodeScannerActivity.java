@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.io.IOException;
 
 import br.ufsc.barcodescanner.R;
+import br.ufsc.barcodescanner.UploadPictureService;
 import br.ufsc.barcodescanner.view.BarcodeScannedHandler;
 import br.ufsc.barcodescanner.view.processor.BarcodeProcessor;
 import br.ufsc.barcodescanner.view.processor.FrameCropperDetector;
@@ -79,6 +80,9 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
         }
 
         viewModel = ViewModelProviders.of(this).get(BarcodeItemViewModel.class);
+
+        Intent i = new Intent(getApplicationContext(), UploadPictureService.class);
+        getApplicationContext().startService(i);
     }
 
     @Override

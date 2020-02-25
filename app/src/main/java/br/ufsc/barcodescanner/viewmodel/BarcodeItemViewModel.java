@@ -28,7 +28,7 @@ public class BarcodeItemViewModel extends AbstractBarcodeViewModel {
     }
 
     private void uploadDir(final Barcode barcode) {
-        this.storage.uploadDir(externalStoragePath, barcode, downloadUri ->
+        this.storage.uploadDir(externalStoragePath, barcode.value, downloadUri ->
                 repository.update(barcode, downloadUri.toMap()));
     }
 

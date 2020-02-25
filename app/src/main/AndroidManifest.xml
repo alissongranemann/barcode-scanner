@@ -31,6 +31,12 @@
         <activity android:name=".view.ui.ScannedBarcodeActivity" />
         <activity android:name=".view.ui.BarcodeListActivity" />
 
+        <service
+            android:name="UploadPictureService"
+            android:label="@string/upload_service_name"
+            >
+        </service>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="br.ufsc.barcodescanner.fileprovider"

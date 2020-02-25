@@ -108,6 +108,16 @@ public class FirebaseBarcodeRepository {
                         + photoUrl.toString()));
     }
 
+    public void update(String barcode, Map<String, String> photoUrl) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        for (Map.Entry<String,String> entry : photoUrl.entrySet()) {
+            childUpdates.put("/img/" + entry.getKey(), entry.getValue());
+        }
+        reference.child(barcode).updateChildren(childUpdates)
+                .addOnCompleteListener(task -> Log.d(TAG, "Barcode updated with image: "
+                        + photoUrl.toString()));
+    }
+
     public interface LoadPageHandler {
 
         void handle(List<Barcode> barcodeList);

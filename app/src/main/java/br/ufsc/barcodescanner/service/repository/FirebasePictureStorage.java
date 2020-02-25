@@ -24,15 +24,15 @@ public class FirebasePictureStorage {
         storage = FirebaseStorage.getInstance();
     }
 
-    public void uploadDir(String externalStoragePath, final Barcode barcode,
+    public void uploadDir(String externalStoragePath, final String barcodeValue,
                           BarcodeItemViewModel.StorageFileUploadedCallback storageFileUploadedCallback) {
-        File dir = new File(externalStoragePath, barcode.value);
+        File dir = new File(externalStoragePath, barcodeValue);
         if (!dir.exists() || !dir.isDirectory()) {
             Log.e(TAG, String.format("Uploading [%s] failed, invalid directory: [%s]",
-                    barcode.value, dir.getPath()));
+                    barcodeValue, dir.getPath()));
             return;
         }
-        StorageReference barcodeReference = storage.getReference(barcode.value);
+        StorageReference barcodeReference = storage.getReference(barcodeValue);
         String[] children = dir.list();
         for (int i = 0; i < children.length; i++) {
             File file = new File(dir, children[i]);
@@ -42,7 +42,9 @@ public class FirebasePictureStorage {
             UploadTask uploadTask = filePath.putFile(uri);
             uploadTask.continueWithTask(task -> {
                 if (!task.isSuccessful()) {
-                    throw task.getException();
+                    Log.e(TAG, String.format("Uploading [%s] failed: [%s]",
+                            barcodeValue, task.getException().getMessage()));
+                    Crashlytics.logException(task.getException());
                 }
                 return filePath.getDownloadUrl();
             }).addOnCompleteListener(task -> {
@@ -54,11 +56,15 @@ public class FirebasePictureStorage {
                         storageFileUploadedCallback.update(new PictureUrl(filename, photoStringLink));
                     }
                     file.delete();
+                    if(dir.length() == 0) {
+                        dir.delete();
+                    }
                 } else {
+                    Log.e(TAG, String.format("Uploading [%s] failed: [%s]",
+                            barcodeValue, task.getException().getMessage()));
                     Crashlytics.logException(task.getException());
                 }
             });
-            dir.delete();
         }
     }
 

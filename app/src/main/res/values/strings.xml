@@ -37,4 +37,5 @@
         We do NOT collect or share any of your non-Personal information.\n
         We do NOT collect or share any of the data from your microphone or camera.\n
     </string>
+    <string name="upload_service_name">Upload picture Service</string>
 </resources>
